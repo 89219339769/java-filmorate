@@ -31,13 +31,13 @@ public class FilmController {
     public void create(@Valid @RequestBody Film film) {
         if (film.getName().isBlank()) {
             log.info(" Название фильма не может быть пустым.");
-            throw new AmptyNameException("Название фильма не может быть пустым.");
+            throw new AmptyNameException(" Название фильма не может быть пустым.");
         }
         StringBuilder str = new StringBuilder();
 
         str.append(film.getDescription());
         if (str.length() > 200) {
-            log.info("Описание фильма не может быть больее 200 символов.");
+            log.info("Описание фильма не может  быть больее 200 символов.");
             throw new LengthFilmException("Описание фильма не может быть больше 200 символов.");
         }
         if (film.getDuration().isNegative()) {
