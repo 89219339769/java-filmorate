@@ -41,7 +41,7 @@ public class FilmController {
             throw new LengthFilmException("Описание фильма не может быть больше 200 символов.");
         }
         if (film.getDuration().isNegative()) {
-            log.info("Продолжительность не может быть отрицательной.");
+            log.info(" Продолжительность не может быть отрицательной.");
             throw new NegativeDurationException("Продолжительность не может быть отрицательной.");
         }
 
