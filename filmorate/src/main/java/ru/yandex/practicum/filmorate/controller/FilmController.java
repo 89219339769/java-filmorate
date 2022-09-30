@@ -36,7 +36,7 @@ public class FilmController {
         StringBuilder str = new StringBuilder();
 
         str.append(film.getDescription());
-        if (str.length() > 200) {
+        if (str.length() >  200) {
             log.info("Описание фильма не может  быть больее 200 символов.");
             throw new LengthFilmException("Описание фильма не может быть больше 200 символов.");
         }
@@ -49,7 +49,7 @@ public class FilmController {
             log.info("Дата релиза фильм не должна быть ранее 28 декабря 1985 года .");
             throw new DateException("Дата релиза фильм не должна быть ранее 28 декабря 1985 года .");
         }
-        log.info("добавлен фильм " + film);
+        log.info("добавлен  фильм " + film);
         films.add(film);
     }
 
