@@ -23,7 +23,7 @@ public class FilmController {
 
     @GetMapping
     public List<Film> findAll() {
-        log.info("Количество фильмов: " + films.size());
+        log.info(" Количество фильмов: " + films.size());
         return films;
     }
 
