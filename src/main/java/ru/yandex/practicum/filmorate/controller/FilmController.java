@@ -45,7 +45,7 @@ public class FilmController {
             throw new NegativeDurationException("Продолжительность не может быть отрицательной.");
         }
 
-        if (film.getReleaseDate().isBefore(LocalDate.of(1985, 12, 28))) {
+        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
             log.info("Дата релиза фильм не должна быть ранее 28 декабря 1985 года .");
             throw new DateException("Дата релиза фильм не должна быть ранее 28 декабря 1985 года .");
         }
