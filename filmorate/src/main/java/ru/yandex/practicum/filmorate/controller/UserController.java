@@ -53,7 +53,7 @@ public class UserController {
         Character ch2 = '@';
         for (int i = 0; i < chArray.length; i++) {
             if (chArray[i] == ch2) {
-                log.info("добавлен пользователь " + user);
+                log.info(" добавлен пользователь " + user);
                 users.put(user.getId(), user);
                 return user;
             }
