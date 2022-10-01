@@ -31,12 +31,12 @@ public class UserController {
         if(user.getBirthday().isAfter(ChronoLocalDate.from(LocalDateTime.now ())))
         {
             log.info("дата рождения не может быть в будущем.");
-            throw new BirsdayException(" дата рождения не может быть в будущем.");
+            throw new BirsdayException("дата рождения не может быть в будущем.");
         }
         String temp = user.getLogin();
         boolean temp1 = temp.contains(" ");
         if (user.getLogin().isBlank() || temp1) {
-            log.info("почтовый адрес не может быть пустым или с пробелами.");
+            log.info(" почтовый адрес не может быть пустым или с пробелами.");
             throw new LoginException("почтовый адрес не может быть пустым или с пробелами.");
         }
         String temp2 = user.getLogin();
