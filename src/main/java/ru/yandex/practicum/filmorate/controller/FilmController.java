@@ -66,6 +66,10 @@ public class FilmController {
             log.info("Список фильмов пустой, нельзя обновить.");
             throw new AmptyListException("Список фильмов пустой, нельзя обновить.");
         }
+        if (film.getId() < 0) {
+            log.info("Id должен быть положитнльным.");
+            throw new AmptyListException("Список фильмов пустой, нельзя обновить.");
+        }
 
         for (int i = 0; i < films.size(); i++) {
             int temp = film.getId();
