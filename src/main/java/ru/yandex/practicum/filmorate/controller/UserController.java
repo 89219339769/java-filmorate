@@ -70,6 +70,11 @@ public class UserController {
     }
     @PutMapping
     public User put(@Valid @RequestBody User user) {
+
+        if(user.getId()<0){
+            throw new InvalidIdException("Id не может быть пустым.");
+        }
+
         if(user.getEmail() == null || user.getEmail().isBlank()) {
             throw new InvalidIdException("Id не может быть пустым.");
         }
