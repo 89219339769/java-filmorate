@@ -70,27 +70,25 @@ public class FilmController {
 
 
     @PutMapping
-    public void put(@Valid @RequestBody Film film) {
-        if (films.size() == 0) {
-            log.info("Список фильмов пустой, нельзя обновить.");
-            throw new AmptyListException("Список фильмов пустой, нельзя обновить.");
-        }
+    public @Valid Film put(@Valid @RequestBody Film film) {
+
         if (film.getId() < 0) {
             log.info("Id должен быть положитнльным.");
             throw new AmptyListException("Список фильмов пустой, нельзя обновить.");
         }
 
-        for (int i = 0; i < films.size(); i++) {
-            int temp = film.getId();
-            if (films.get(i).getId() == temp) {
-                films.remove(i);
+        //   for (int i = 0; i < films.size(); i++) {
+        //    int temp = film.getId();
+        //    if (films.get(i).getId() == temp) {
+        //       films.remove(i);
+        if (!films.containsKey(film.getId())) {
 
+            film.setId(id++);
+            films.put(film.getId(), film);
+            log.info("Фильм с id {} добавлен", film.getId());
+            return film;
 
-                films.put(id,film);
-                log.info("Список фильмов обновлен");
-            } else {
-                log.info("в списке нет фильма с номером" + film.getId() + "используйте метод create");
-            }
         }
+        return film;
     }
 }
