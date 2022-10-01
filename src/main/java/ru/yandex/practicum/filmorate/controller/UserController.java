@@ -30,7 +30,7 @@ public class UserController {
     public User create(@Valid @RequestBody User user) {
         if(user.getBirthday().isAfter(ChronoLocalDate.from(LocalDateTime.now ())))
         {
-            log.info("дата рождения не может быть в будущем.");
+            log.info("дата  рождения не может быть в будущем.");
             throw new BirsdayException("дата рождения не может быть в будущем.");
         }
         String temp = user.getLogin();
