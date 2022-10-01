@@ -65,6 +65,7 @@ public class FilmController {
 
         log.info("добавлен  фильм " + film);
         films.put(id,film);
+        film.setId( id);
         id++;
     }
 
