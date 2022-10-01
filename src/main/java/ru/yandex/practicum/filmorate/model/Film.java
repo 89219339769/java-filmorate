@@ -15,6 +15,8 @@ import java.time.LocalDate;
 public class Film {
     int id;
     // @NotBlank
+
+
     String name;
     //   @Size(max = 300)
     String description;
@@ -23,4 +25,7 @@ public class Film {
     LocalDate releaseDate;
     //   @Positive
     Duration duration;
+
+
+    int rate;
 }
