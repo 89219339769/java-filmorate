@@ -37,7 +37,7 @@ public class UserController {
 
         if(user.getBirthday().isAfter(ChronoLocalDate.from(LocalDateTime.now ())))
         {
-            log.info("дата  р ождения не может быть в будущем.");
+            log.info("дата  рождения не может быть в будущем.");
             throw new BirsdayException("дата рождения не может быть в будущем.");
         }
         String temp = user.getLogin();
@@ -47,7 +47,7 @@ public class UserController {
             throw new LoginException("почтовый адрес не может быть пустым или с пробелами.");
         }
         String temp2 = user.getLogin();
-        if(user.getName().isBlank()){
+        if(user.getName()==null||user.getId()==0){
             user.setName(temp2);
             log.info("логин будет использоваться как имя.");
         }
