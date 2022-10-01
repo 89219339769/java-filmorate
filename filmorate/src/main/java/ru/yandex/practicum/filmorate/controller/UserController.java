@@ -31,7 +31,7 @@ public class UserController {
         if(user.getBirthday().isAfter(ChronoLocalDate.from(LocalDateTime.now ())))
         {
             log.info("дата рождения не может быть в будущем.");
-            throw new BirsdayException("дата рождения не может быть в будущем.");
+            throw new BirsdayException(" дата рождения не может быть в будущем.");
         }
         String temp = user.getLogin();
         boolean temp1 = temp.contains(" ");
