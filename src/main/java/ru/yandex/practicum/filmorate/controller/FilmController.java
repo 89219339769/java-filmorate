@@ -9,20 +9,22 @@ import ru.yandex.practicum.filmorate.model.Film;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-
-
+import java.util.Map;
 
 
 @RestController
 @RequestMapping("/films")
 public class FilmController {
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
-    private final List<Film> films = new ArrayList<>();
-
+   // private final List<Film> films = new ArrayList<>();
+    public static Map<Integer, Film> films = new HashMap<>();
+    int id = 1;
     @GetMapping
-    public List<Film> findAll() {
+
+
+    public  Map<Integer, Film> findAll() {
         log.info(" Количество фильмов: " + films.size());
         return films;
     }
@@ -30,10 +32,7 @@ public class FilmController {
     @PostMapping
     public void create(@Valid @RequestBody Film film) {
 
-        if(film.getId()==0){
-            int temp = 1;
-            film.setId(temp);
-        }
+
 
 
         if (film.getName().isBlank()) {
@@ -56,8 +55,17 @@ public class FilmController {
             log.info("Дата релиза фильм не должна быть ранее 28 декабря 1985 года .");
             throw new DateException("Дата релиза фильм не должна быть ранее 28 декабря 1985 года .");
         }
+
+        if(films.containsKey(film.getId())){
+            throw new ValidationException("Фильм - " + film.getName() + " c id - " + film.getId() + " уже есть в базе");
+        }
+
+
+
+
         log.info("добавлен  фильм " + film);
-        films.add(film);
+        films.put(id,film);
+        id++;
     }
 
     @PutMapping
@@ -75,7 +83,7 @@ public class FilmController {
             int temp = film.getId();
             if (films.get(i).getId() == temp) {
                 films.remove(i);
-                films.add(film);
+                films.put(id,film);
                 log.info("Список фильмов обновлен");
             } else {
                 log.info("в списке нет фильма с номером" + film.getId() + "используйте метод create");
