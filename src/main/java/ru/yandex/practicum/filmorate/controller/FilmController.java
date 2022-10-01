@@ -60,13 +60,11 @@ public class FilmController {
             throw new ValidationException("Фильм - " + film.getName() + " c id - " + film.getId() + " уже есть в базе");
         }
 
-
-
-
         log.info("добавлен  фильм " + film);
-        films.put(id,film);
-        film.setId( id);
-        id++;
+
+        film.setId(id++);
+        films.put(film.getId(), film);
+        log.info("В библиотеку добавлен фильм {}", film);
     }
 
     @PutMapping
