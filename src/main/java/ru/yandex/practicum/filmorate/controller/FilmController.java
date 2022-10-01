@@ -29,6 +29,13 @@ public class FilmController {
 
     @PostMapping
     public void create(@Valid @RequestBody Film film) {
+
+        if(film.getId()==0){
+            int temp = 1;
+            film.setId(temp);
+        }
+
+
         if (film.getName().isBlank()) {
             log.info(" Название фильма не может быть пустым.");
             throw new AmptyNameException(" Название фильма не может быть пустым.");
