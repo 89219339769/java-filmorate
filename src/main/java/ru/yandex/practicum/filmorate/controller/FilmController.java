@@ -8,9 +8,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -20,7 +18,7 @@ public class FilmController {
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
    // private final List<Film> films = new ArrayList<>();
     public static Map<Integer, Film> films = new HashMap<>();
-    int id = 1;
+    int id =1;
     @GetMapping
 
 
@@ -30,7 +28,7 @@ public class FilmController {
     }
 
     @PostMapping
-    public void create(@Valid @RequestBody Film film) {
+    public @Valid Film create(@Valid @RequestBody Film film) {
 
 
 
@@ -60,12 +58,16 @@ public class FilmController {
             throw new ValidationException("Фильм - " + film.getName() + " c id - " + film.getId() + " уже есть в базе");
         }
 
-        log.info("добавлен  фильм " + film);
+        if(films.containsKey(film.getId())){
+            throw new ValidationException("Фильм - " + film.getName() + " c id - " + film.getId() + " уже есть в базе");
+        }
 
-        film.setId(id++);
-        films.put(film.getId(), film);
-        log.info("В библиотеку добавлен фильм {}", film);
-    }
+            film.setId(id++);
+            films.put(film.getId(), film);
+            log.info("Фильм с id {} добавлен", film.getId());
+            return film;
+        }
+
 
     @PutMapping
     public void put(@Valid @RequestBody Film film) {
@@ -82,6 +84,8 @@ public class FilmController {
             int temp = film.getId();
             if (films.get(i).getId() == temp) {
                 films.remove(i);
+
+
                 films.put(id,film);
                 log.info("Список фильмов обновлен");
             } else {

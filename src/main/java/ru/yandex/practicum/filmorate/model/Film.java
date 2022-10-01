@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Builder
 @Data
 public class Film {
-    int id;
+    int id =1;
     // @NotBlank
 
 
