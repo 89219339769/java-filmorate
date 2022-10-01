@@ -28,6 +28,14 @@ public class UserController {
 
     @PostMapping
     public User create(@Valid @RequestBody User user) {
+
+        if(user.getId()==0){
+           int temp =1;
+           user.setId(temp);
+
+        }
+
+
         if(user.getBirthday().isAfter(ChronoLocalDate.from(LocalDateTime.now ())))
         {
             log.info("дата  р ождения не может быть в будущем.");

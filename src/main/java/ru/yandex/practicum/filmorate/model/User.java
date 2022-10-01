@@ -15,6 +15,6 @@ public class User {
     String name;
     LocalDate birthday;
 
-    public User(int i, String s, String dfdf, String sdsd, LocalDate of) {
-    }
+  //  public User(int i, String s, String dfdf, String sdsd, LocalDate of) {
+  //  }
 }
