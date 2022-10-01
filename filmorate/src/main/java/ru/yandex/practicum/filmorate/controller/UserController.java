@@ -46,7 +46,7 @@ public class UserController {
         }
         if (user.getEmail().isBlank()) {
             log.info("почтовый адрес не может быть пустым.");
-            throw new MailException("почтовый адрес не может быть пустым.");
+            throw new MailException(" почтовый адрес не может быть пустым.");
         }
         String string = user.getEmail();
         char[] chArray = string.toCharArray();
