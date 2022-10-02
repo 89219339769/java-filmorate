@@ -32,7 +32,7 @@ import java.util.Map;
 
             film.setId(id++);
             films.put(film.getId(), film);
-            log.info("Фильм с id {} добавлен", film.getId());
+            log.info("Фильм с id {} добавлен ", film.getId());
             return film;
         }
 
