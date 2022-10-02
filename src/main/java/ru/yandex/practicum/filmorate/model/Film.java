@@ -10,22 +10,15 @@ import javax.validation.constraints.Size;
 import java.time.Duration;
 import java.time.LocalDate;
 
-@Builder
 @Data
+@Builder
 public class Film {
-    int id =1;
-    // @NotBlank
-
-
-    String name;
-    //   @Size(max = 300)
-    String description;
-
-
-    LocalDate releaseDate;
-    //   @Positive
-    Duration duration;
-
-
-    int rate;
+    private int id;
+    @NotBlank(message = "Название фильма не может быть пустым.")
+    private String name;
+    @Size(max = 200, message = "Максимальная длина описания фильма — 200 символов.")
+    private String description;
+    private LocalDate releaseDate;
+    @Positive(message = "Продолжительность фильма должна быть положительной.")
+    private int duration;
 }

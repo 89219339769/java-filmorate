@@ -1,4 +1,5 @@
 package ru.yandex.practicum.filmorate.controller;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,14 +9,81 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
-@RestController
-@RequestMapping("/films")
-public class FilmController {
-    private static final Logger log = LoggerFactory.getLogger(FilmController.class);
+
+
+    @RestController
+    @RequestMapping("/films")
+// @Slf4j
+    public class FilmController {
+        protected final Map<Integer, Film> films = new HashMap<>();
+        protected int id = 1;
+        private static final Logger log = LoggerFactory.getLogger(FilmController.class);
+
+        @PostMapping()
+        public Film createFilm(@Valid @RequestBody Film film) {
+            validateFilmCreate(film);
+            validateDateOfReliseFilm(film);
+
+            film.setId(id++);
+            films.put(film.getId(), film);
+            log.info("Фильм с id {} добавлен", film.getId());
+            return film;
+        }
+
+        @PutMapping()
+        public Film updateFilm(@Valid @RequestBody Film film) {
+            //   validateFilmId(!films.containsKey(film.getId()), film, " не существует.");
+            films.put(film.getId(), film);
+            log.info("Фильм с id {} обновлён", film.getId());
+            return film;
+        }
+
+        @GetMapping()
+        public List<Film> getAllFilms() {
+            return new ArrayList<>(films.values());
+        }
+
+        public void validateFilmCreate(Film film) {
+            if (films.containsKey(film.getId())) {
+                throw new ValidationException("Фильм - " + film.getName() + " c id - " + film.getId() + " уже существует");
+            }
+        }
+
+        public void validateDateOfReliseFilm(Film film) {
+            if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
+                log.info("Дата релиза фильм не должна быть ранее 28 декабря 1895 года .");
+                throw new DateException("Дата релиза фильм не должна быть ранее 28 декабря 1895 года .");
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*    private static final Logger log = LoggerFactory.getLogger(FilmController.class);
    // private final List<Film> films = new ArrayList<>();
     public static Map<Integer, Film> films = new HashMap<>();
     int id =1;
@@ -91,4 +159,4 @@ public class FilmController {
         }
         return film;
     }
-}
+    */

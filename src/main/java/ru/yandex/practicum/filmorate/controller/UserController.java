@@ -30,7 +30,7 @@ public class UserController {
     public User create(@Valid @RequestBody User user) {
 
         if(user.getId()==0){
-           int temp = 1;
+         int temp = 1;
            user.setId(temp);
         }
 
