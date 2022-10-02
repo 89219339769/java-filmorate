@@ -38,7 +38,8 @@ import java.util.Map;
 
         @PutMapping()
         public Film updateFilm(@Valid @RequestBody Film film) {
-            //   validateFilmId(!films.containsKey(film.getId()), film, " не существует.");
+            validateFilmPost(film);
+            validateDateOfReliseFilm(film);
             films.put(film.getId(), film);
             log.info("Фильм с id {} обновлён", film.getId());
             return film;
@@ -54,6 +55,14 @@ import java.util.Map;
                 throw new ValidationException("Фильм - " + film.getName() + " c id - " + film.getId() + " уже существует");
             }
         }
+        public void validateFilmPost(Film film) {
+            if (!films.containsKey(film.getId())) {
+                throw new ValidationException("Фильма - " + film.getName() + " c id - " + film.getId() + " не существует");
+            }
+        }
+
+
+
 
         public void validateDateOfReliseFilm(Film film) {
             if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {

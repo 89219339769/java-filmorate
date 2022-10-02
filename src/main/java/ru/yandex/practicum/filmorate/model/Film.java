@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class Film {
+    @Positive(message = "Id фильма должен быть положительным.")
     private int id;
     @NotBlank(message = "Название фильма не может быть пустым.")
     private String name;
