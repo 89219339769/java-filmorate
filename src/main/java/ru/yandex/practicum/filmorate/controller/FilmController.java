@@ -38,7 +38,8 @@ import java.util.Map;
 
         @PutMapping()
         public Film updateFilm(@Valid @RequestBody Film film) {
-            //   validateFilmId(!films.containsKey(film.getId()), film, " не существует.");
+           if (film.getId()<0){
+               throw new ValidationException("Id Фильма не может быть отрицательным ");}
             films.put(film.getId(), film);
             log.info("Фильм с id {} обновлён", film.getId());
             return film;
