@@ -38,7 +38,9 @@ import java.util.Map;
 
         @PutMapping()
         public Film updateFilm(@Valid @RequestBody Film film) {
-           if (film.getId()<0){
+            validateFilmPut(film);
+            validateDateOfReliseFilm(film);
+            if (film.getId()<0){
                throw new ValidationException("Id Фильма не может быть отрицательным ");}
             films.put(film.getId(), film);
             log.info("Фильм с id {} обновлён", film.getId());
@@ -55,6 +57,15 @@ import java.util.Map;
                 throw new ValidationException("Фильм - " + film.getName() + " c id - " + film.getId() + " уже существует");
             }
         }
+
+
+        public void validateFilmPut(Film film) {
+            if (!films.containsKey(film.getId())) {
+                throw new ValidationException("Фильм - " + film.getName() + " c id - " + film.getId() + " не существует");
+            }
+        }
+
+
 
         public void validateDateOfReliseFilm(Film film) {
             if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
