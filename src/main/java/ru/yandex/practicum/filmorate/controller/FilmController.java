@@ -14,12 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-
-
     @RestController
     @RequestMapping("/films")
-// @Slf4j
     public class FilmController {
         protected final Map<Integer, Film> films = new HashMap<>();
         protected int id = 1;
@@ -29,7 +25,6 @@ import java.util.Map;
         public Film createFilm(@Valid @RequestBody Film film) {
             validateFilmCreate(film);
             validateDateOfReliseFilm(film);
-
             film.setId(id++);
             films.put(film.getId(), film);
             log.info("Фильм с id {} добавлен ", film.getId());
@@ -58,19 +53,16 @@ import java.util.Map;
             }
         }
 
-
         public void validateFilmPut(Film film) {
             if (!films.containsKey(film.getId())) {
                 throw new ValidationException("Фильм - " + film.getName() + " c id - " + film.getId() + " не существует");
             }
         }
 
-
-
         public void validateDateOfReliseFilm(Film film) {
             if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
                 log.info("Дата релиза фильм не должна быть ранее 28 декабря 1895 года .");
-                throw new DateException("Дата релиза фильм не должна быть ранее 28 декабря 1895 года .");
+                throw new ValidationException("Дата релиза фильм не должна быть ранее 28 декабря 1895 года .");
             }
         }
     }
