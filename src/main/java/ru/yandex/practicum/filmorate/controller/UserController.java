@@ -80,6 +80,10 @@ public class UserController {
     }
 
     public void validateUserPut(User user) {
+        if (!users.containsKey(user.getId())) {
+            throw new ValidationException("Пользователь - " + user.getName() + " c id - " + user.getId() + " не существует");
+        }
+
         if (user.getId() < 0) {
             throw new ValidationException("Id не может быть отрицательным.");
         }
@@ -87,6 +91,9 @@ public class UserController {
         if (user.getEmail() == null || user.getEmail().isBlank()) {
             throw new ValidationException("почтовый адрес не может быть пустым.");
         }
-
     }
+
+
+
+
 }
