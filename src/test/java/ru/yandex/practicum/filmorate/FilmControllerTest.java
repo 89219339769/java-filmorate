@@ -1,10 +1,17 @@
 package ru.yandex.practicum.filmorate;
+
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.PropertyBatchUpdateException;
+import org.springframework.beans.factory.parsing.Problem;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
+
 import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.util.AssertionErrors.assertEquals;
 
 public class FilmControllerTest {
     private FilmController uc;
@@ -12,16 +19,10 @@ public class FilmControllerTest {
     private Film getFilm() {
         return Film.builder()
                 .id(1)
-                .description("\"Фильмов много — и с каждым годом становится всё больше. \" +\n" +
-                        "  \"Чем их больше, тем больше разных оценок. \" +\n" +
-                        " \"Чем больше оценок, тем сложнее сделать выбор. Однако не время сдаваться!\" +\n" +
-                        " \" Вы напишете бэкенд для сервиса, который будет работать с фильмами и оценками\" +\n" +
-                        " \" пользователей, а также возвращать топ-5 фильмов, рекомендованных к просмотру.\" +\n" +
-                        "  \" Теперь ни вам, ни вашим друзьям не придётся долго размышлять, что посмотреть \" +\n" +
-                        "  \"вечером.\"")
-                .name("")
-                .releaseDate(LocalDate.of(1721, 1, 1))
-                .duration(-90)
+                .description("Фильмов много — и с каждым годом становится всё больше.")
+                .name("фильм")
+                .releaseDate(LocalDate.of(1921, 1, 1))
+                .duration(90)
                 .build();
     }
 
@@ -29,29 +30,42 @@ public class FilmControllerTest {
     public void createFilmWithInvalidRelisDate() {
         uc = new FilmController();
         Film film = getFilm();
-        assertThrows(ValidationException.class, () -> uc.createFilm(film));
+        uc.createFilm(film);
+        Film updateFilm = getFilm();
+        updateFilm.setReleaseDate(LocalDate.of(1721, 1, 1));
+        RuntimeException exception;
+
+        exception = assertThrows(ValidationException.class, () -> uc.validateDateOfReliseFilm(updateFilm));
+        assertEquals(exception.getMessage(), exception.getMessage(), "Дата релиза фильм не должна быть ранее 28 декабря 1895 года .");
     }
 
 
     @Test
-    public void createFilmWithEmptyName() {
+    public void createFilmWithWrongId() {
         uc = new FilmController();
         Film film = getFilm();
-        assertThrows(ValidationException.class, () -> uc.createFilm(film));
+        uc.createFilm(film);
+        Film updateFilm = getFilm();
+        updateFilm.setId(1);
+        RuntimeException exception;
+
+        exception = assertThrows(ValidationException.class, () -> uc.validateFilmCreate(updateFilm));
+        assertEquals(exception.getMessage(), exception.getMessage(), "Фильм - " + film.getName() + " c id - " + film.getId() + " уже существует");
     }
+
 
     @Test
-    public void createFilmWithWrongDescription() {
+    public void createFilmWithNegativeId() {
         uc = new FilmController();
         Film film = getFilm();
-        assertThrows(ValidationException.class, () -> uc.createFilm(film));
+        uc.createFilm(film);
+        Film updateFilm = getFilm();
+        updateFilm.setId(-1);
+        RuntimeException exception;
+
+        exception = assertThrows(ValidationException.class, () -> uc.validateFilmId(updateFilm));
+        assertEquals(exception.getMessage(), exception.getMessage(), "Id Фильма не может быть отрицательным ");
     }
 
 
-    @Test
-    public void createFilmWithNegativeDuration() {
-        uc = new FilmController();
-        Film film = getFilm();
-        assertThrows(ValidationException.class, () -> uc.createFilm(film));
-    }
 }
