@@ -54,6 +54,10 @@ public class UserController {
     }
 
     public void validateUserPost(User user) {
+        if (users.containsKey(user.getId())) {
+            throw new ValidationException("Пользователь - " + user.getName() + " c id - " + user.getId() + " уже существует");
+        }
+
         if (user.getId() == 0) {
             int temp = 1;
             user.setId(temp);

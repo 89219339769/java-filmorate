@@ -18,8 +18,10 @@ import java.util.Map;
 @RestController
 @RequestMapping("/films")
 public class FilmController {
+
+
     private final Map<Integer, Film> films = new HashMap<>();
-    protected int id = 1;
+    private int id = 1;
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
 
     @PostMapping()
