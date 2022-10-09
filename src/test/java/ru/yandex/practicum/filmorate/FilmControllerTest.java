@@ -1,9 +1,8 @@
 package ru.yandex.practicum.filmorate;
 
-<<<<<<< HEAD
+
 import org.junit.jupiter.api.BeforeEach;
-=======
->>>>>>> controllers-films-users
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.PropertyBatchUpdateException;
 import org.springframework.beans.factory.parsing.Problem;
@@ -29,7 +28,7 @@ public class FilmControllerTest {
                 .duration(90)
                 .build();
     }
-<<<<<<< HEAD
+
     @BeforeEach
     public void beforeEach() {
         uc = new FilmController();
@@ -37,17 +36,16 @@ public class FilmControllerTest {
         uc.createFilm(film);
     }
 
-    @Test
-    public void createFilmWithInvalidRelisDate() {
 
-=======
+
+
 
     @Test
     public void createFilmWithInvalidRelisDate() {
         uc = new FilmController();
         Film film = getFilm();
         uc.createFilm(film);
->>>>>>> controllers-films-users
+
         Film updateFilm = getFilm();
         updateFilm.setReleaseDate(LocalDate.of(1721, 1, 1));
         RuntimeException exception;
@@ -59,20 +57,12 @@ public class FilmControllerTest {
 
     @Test
     public void createFilmWithWrongId() {
-<<<<<<< HEAD
-        Film updateFilm = getFilm();
-        updateFilm.setId(1);
-        RuntimeException exception;
-        Film film = getFilm();
-=======
-        uc = new FilmController();
-        Film film = getFilm();
-        uc.createFilm(film);
-        Film updateFilm = getFilm();
-        updateFilm.setId(1);
-        RuntimeException exception;
 
->>>>>>> controllers-films-users
+        Film updateFilm = getFilm();
+        updateFilm.setId(1);
+        RuntimeException exception;
+        Film film = getFilm();
+
         exception = assertThrows(ValidationException.class, () -> uc.validateFilmCreate(updateFilm));
         assertEquals(exception.getMessage(), exception.getMessage(), "Фильм - " + film.getName() + " c id - " + film.getId() + " уже существует");
     }
@@ -80,12 +70,11 @@ public class FilmControllerTest {
 
     @Test
     public void createFilmWithNegativeId() {
-<<<<<<< HEAD
-=======
+
         uc = new FilmController();
         Film film = getFilm();
         uc.createFilm(film);
->>>>>>> controllers-films-users
+
         Film updateFilm = getFilm();
         updateFilm.setId(-1);
         RuntimeException exception;
@@ -93,9 +82,5 @@ public class FilmControllerTest {
         exception = assertThrows(ValidationException.class, () -> uc.validateFilmId(updateFilm));
         assertEquals(exception.getMessage(), exception.getMessage(), "Id Фильма не может быть отрицательным ");
     }
-<<<<<<< HEAD
-=======
 
-
->>>>>>> controllers-films-users
 }
