@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> controllers-films-users
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.Builder;
