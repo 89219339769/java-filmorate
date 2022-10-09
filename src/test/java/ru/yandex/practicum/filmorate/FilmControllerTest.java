@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.PropertyBatchUpdateException;
 import org.springframework.beans.factory.parsing.Problem;
@@ -25,12 +26,16 @@ public class FilmControllerTest {
                 .duration(90)
                 .build();
     }
-
-    @Test
-    public void createFilmWithInvalidRelisDate() {
+    @BeforeEach
+    public void beforeEach() {
         uc = new FilmController();
         Film film = getFilm();
         uc.createFilm(film);
+    }
+
+    @Test
+    public void createFilmWithInvalidRelisDate() {
+
         Film updateFilm = getFilm();
         updateFilm.setReleaseDate(LocalDate.of(1721, 1, 1));
         RuntimeException exception;
@@ -42,13 +47,10 @@ public class FilmControllerTest {
 
     @Test
     public void createFilmWithWrongId() {
-        uc = new FilmController();
-        Film film = getFilm();
-        uc.createFilm(film);
         Film updateFilm = getFilm();
         updateFilm.setId(1);
         RuntimeException exception;
-
+        Film film = getFilm();
         exception = assertThrows(ValidationException.class, () -> uc.validateFilmCreate(updateFilm));
         assertEquals(exception.getMessage(), exception.getMessage(), "Фильм - " + film.getName() + " c id - " + film.getId() + " уже существует");
     }
@@ -56,9 +58,6 @@ public class FilmControllerTest {
 
     @Test
     public void createFilmWithNegativeId() {
-        uc = new FilmController();
-        Film film = getFilm();
-        uc.createFilm(film);
         Film updateFilm = getFilm();
         updateFilm.setId(-1);
         RuntimeException exception;
@@ -66,6 +65,4 @@ public class FilmControllerTest {
         exception = assertThrows(ValidationException.class, () -> uc.validateFilmId(updateFilm));
         assertEquals(exception.getMessage(), exception.getMessage(), "Id Фильма не может быть отрицательным ");
     }
-
-
 }
