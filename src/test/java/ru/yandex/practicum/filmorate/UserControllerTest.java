@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.time.LocalDate;
 
@@ -28,7 +29,8 @@ public class UserControllerTest {
 
     @BeforeEach
     public void beforeEach() {
-        uc = new UserController();
+        InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
+        uc = new UserController(inMemoryUserStorage);
         User user = getUser();
         uc.create(user);
     }
