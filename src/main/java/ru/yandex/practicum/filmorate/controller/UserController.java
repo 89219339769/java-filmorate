@@ -15,16 +15,16 @@ public class UserController {
 
     private UserService userService;
     public final UserStorage inMemoryUserStorage;
+
     public UserController(UserService userService, UserStorage inMemoryUserStorage) {
         this.userService = userService;
         this.inMemoryUserStorage = inMemoryUserStorage;
     }
 
 
-
     @GetMapping
     public Collection<User> findAll() {
-        return  inMemoryUserStorage.findAll();
+        return inMemoryUserStorage.findAll();
     }
 
     @GetMapping("user/{id}")
@@ -33,11 +33,17 @@ public class UserController {
     }
 
 
-
     @PostMapping("users/{id}/friends/{friendId}")
-    public User addFriend(@PathVariable("id") Integer id,@PathVariable("friendId")Integer friendId) {
-return userService.addFriend(id,friendId);
+    public User addFriend(@PathVariable("id") Integer id, @PathVariable("friendId") Integer friendId) {
+        return userService.addFriend(id, friendId);
     }
+
+
+    @DeleteMapping ("users/{id}/friends/{friendId}")
+    public User deleteFriend(@PathVariable("id") Integer id,@PathVariable("friendId")Integer friendId) {
+        return userService.deleteFriend(id,friendId);
+    }
+
 
 
 
