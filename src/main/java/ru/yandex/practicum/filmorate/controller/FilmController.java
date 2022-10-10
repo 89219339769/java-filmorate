@@ -16,15 +16,11 @@ import java.util.List;
 @RequestMapping("/films")
 public class FilmController {
 
-
     public FilmController(FilmStorage inMemoryFilmStorage) {
         this.inMemoryFilmStorage = inMemoryFilmStorage;
     }
 
     public final  FilmStorage  inMemoryFilmStorage;
-
-
-
 
     @PostMapping()
     public Film createFilm(@Valid @RequestBody Film film) {
@@ -43,4 +39,10 @@ public class FilmController {
 
         return inMemoryFilmStorage.getAllFilms();
     }
+
+    @GetMapping("film/{id}")
+    public Film findFilm(@PathVariable("id") Integer id) {
+        return inMemoryFilmStorage.findFilmById(id);
+    }
+
 }

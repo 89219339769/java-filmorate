@@ -13,10 +13,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class InMemoryFilmStorage implements FilmStorage {
@@ -53,6 +50,19 @@ public class InMemoryFilmStorage implements FilmStorage {
 
          return new ArrayList<>(films.values());
      }
+
+
+    public Film findFilmById(Integer id) {
+        if(films.containsKey( id)){
+
+            Film  film = films.get(id);
+            return film;
+        }
+        throw new ValidationException("Фильма с этим номером не существует");
+    }
+
+
+
 
 
      public void validateFilmPut(Film film) {

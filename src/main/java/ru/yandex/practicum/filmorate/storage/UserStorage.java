@@ -16,7 +16,7 @@ import java.util.Map;
 
 public interface UserStorage {
 
-
+        public User findUserById(Integer id);
         public Collection<User> findAll();
 
 

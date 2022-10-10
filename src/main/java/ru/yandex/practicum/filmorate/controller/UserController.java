@@ -34,6 +34,13 @@ public class UserController {
         return  inMemoryUserStorage.findAll();
     }
 
+    @GetMapping("user/{id}")
+    public User findUser(@PathVariable("id") Integer id) {
+        return inMemoryUserStorage.findUserById(id);
+    }
+
+
+
     @PostMapping
     public User create(@Valid @RequestBody User user) {
         return inMemoryUserStorage.create(user);
