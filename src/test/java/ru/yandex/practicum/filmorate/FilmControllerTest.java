@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 import java.time.LocalDate;
@@ -33,7 +34,7 @@ public class FilmControllerTest {
 
     @BeforeEach
     public void beforeEach() {
-        InMemoryFilmStorage inMemoryFilmStorage = new InMemoryFilmStorage();
+        FilmStorage inMemoryFilmStorage = new InMemoryFilmStorage();
      //   inMemoryFilmStorage.createFilm(film);
         uc = new  FilmController(inMemoryFilmStorage);
         Film film = getFilm();

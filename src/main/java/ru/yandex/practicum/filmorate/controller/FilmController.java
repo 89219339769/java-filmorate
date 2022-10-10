@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.*;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 import javax.validation.Valid;
@@ -16,11 +17,11 @@ import java.util.List;
 public class FilmController {
 
 
-    public FilmController(InMemoryFilmStorage inMemoryFilmStorage) {
+    public FilmController(FilmStorage inMemoryFilmStorage) {
         this.inMemoryFilmStorage = inMemoryFilmStorage;
     }
 
-    public final  InMemoryFilmStorage  inMemoryFilmStorage;
+    public final  FilmStorage  inMemoryFilmStorage;
 
 
 

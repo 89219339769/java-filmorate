@@ -25,4 +25,6 @@ public interface FilmStorage {
 
     public void validateFilmId(Film film);
 
+    public void validateFilmCreate(Film film);
+
 }
