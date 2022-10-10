@@ -51,7 +51,7 @@ public class InMemoryFilmStorage implements FilmStorage {
          return new ArrayList<>(films.values());
      }
 
-
+    @GetMapping()
     public Film findFilmById(Integer id) {
         if(films.containsKey( id)){
 

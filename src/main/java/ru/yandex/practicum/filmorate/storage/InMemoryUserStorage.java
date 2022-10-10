@@ -27,7 +27,7 @@ public class InMemoryUserStorage implements UserStorage {
     public Collection<User> findAll() {
         return users.values();
     }
-
+    @GetMapping
     public User findUserById(Integer id) {
         if(users.containsKey( id)){
 
@@ -119,6 +119,9 @@ public class InMemoryUserStorage implements UserStorage {
         }
     }
 
+    public Map<Integer, User> getUsers() {
+        return users;
+    }
 }
 
 
