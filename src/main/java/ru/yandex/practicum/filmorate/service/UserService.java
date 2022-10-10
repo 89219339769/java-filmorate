@@ -18,14 +18,18 @@ public class UserService {
     public UserService(InMemoryUserStorage inMemoryUserStorage) {
         this.inMemoryUserStorage = inMemoryUserStorage;
     }
-    Set<Long> friends = new HashSet<>();
+    Set<Integer> friends = new HashSet<>();
+    Set<Integer> friends2 = new HashSet<>();
     // id  к кому  friendId кого
-    public User addFriend(Integer id, Long friendId) {
+    public User addFriend(Integer id, Integer friendId) {
         if (inMemoryUserStorage.getUsers().containsKey(id) ||
                 inMemoryUserStorage.getUsers().containsKey(friendId)) {
             User user = inMemoryUserStorage.getUsers().get(id);
             friends.add(friendId);
             user.setFriends(friends);
+            User user2 = inMemoryUserStorage.getUsers().get(friendId);
+            friends2.add(id);
+            user2.setFriends(friends2);
             return user;
         }
         throw new ValidationException("Пользователя с этим номером не существует");

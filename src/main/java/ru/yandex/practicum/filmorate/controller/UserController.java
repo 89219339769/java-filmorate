@@ -35,7 +35,7 @@ public class UserController {
 
 
     @PostMapping("users/{id}/friends/{friendId}")
-    public User addFriend(@PathVariable("id") Integer id,@PathVariable("friendId")long friendId) {
+    public User addFriend(@PathVariable("id") Integer id,@PathVariable("friendId")Integer friendId) {
 return userService.addFriend(id,friendId);
     }
 
