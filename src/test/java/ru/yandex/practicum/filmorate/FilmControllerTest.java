@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 import java.time.LocalDate;
@@ -18,40 +19,35 @@ public class FilmControllerTest {
 
 
 
-    public final InMemoryFilmStorage inMemoryFilmStorage;
-    public  FilmControllerTest(InMemoryFilmStorage inMemoryFilmStorage) {
-        this.inMemoryFilmStorage = inMemoryFilmStorage;
-    }
-
-
-    private FilmController uc;
+    private  FilmController uc;
 
     private Film getFilm() {
         return Film.builder()
                 .id(1)
                 .description("Фильмов много — и с каждым годом становится всё больше.")
                 .name("фильм")
-                .releaseDate(LocalDate.of(1921, 1, 1))
+                .releaseDate(LocalDate.of(1955, 1, 1))
                 .duration(90)
                 .build();
     }
 
     @BeforeEach
     public void beforeEach() {
-        uc = new FilmController(inMemoryFilmStorage);
+        InMemoryFilmStorage inMemoryFilmStorage = new InMemoryFilmStorage();
+     //   inMemoryFilmStorage.createFilm(film);
+        uc = new  FilmController(inMemoryFilmStorage);
         Film film = getFilm();
         uc.createFilm(film);
-    }
-
-
-
+   }
 
 
     @Test
     public void createFilmWithInvalidRelisDate() {
 
         Film updateFilm = getFilm();
-        updateFilm.setReleaseDate(LocalDate.of(1721, 1, 1));
+        updateFilm.setReleaseDate(LocalDate.of(1526, 1, 1));
+
+        //  uc.createFilm(updateFilm);
         RuntimeException exception;
 
         exception = assertThrows(ValidationException.class, () -> uc.inMemoryFilmStorage.validateDateOfReliseFilm(updateFilm));
