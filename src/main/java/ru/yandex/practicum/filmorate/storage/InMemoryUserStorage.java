@@ -12,14 +12,14 @@ import ru.yandex.practicum.filmorate.model.User;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 @Service
 public class InMemoryUserStorage implements UserStorage {
     private int id = 1;
+
+    private Set<Integer> defoultfriends = new HashSet<>();
     private static final Logger log = LoggerFactory.getLogger(ru.yandex.practicum.filmorate.controller.UserController.class);
     private final Map<Integer, User> users = new HashMap<>();
 
@@ -50,6 +50,7 @@ public class InMemoryUserStorage implements UserStorage {
             if (chArray[i] == ch2) {
 
                 user.setId(id++);
+                user.setFriends(defoultfriends);
                 users.put(user.getId(), user);
                 log.info("Фильм с id {} добавлен ", user.getId());
                 return user;
