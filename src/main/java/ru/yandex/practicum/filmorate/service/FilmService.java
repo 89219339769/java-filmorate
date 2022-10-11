@@ -26,7 +26,6 @@ public class FilmService {
                 inMemoryUserStorage.getUsers().containsKey(userId)) {
             Film film = inMemoryFilmStorage.getFilms().get(id);
             User user = inMemoryUserStorage.getUsers().get(userId);
-            Set<User> likeTemp = film.getLike();
             if (film.getLike().contains(user)) {
                 throw new ValidationException("этот пользователь уже поставил лайк'");
             }
@@ -39,4 +38,28 @@ public class FilmService {
         }
         throw new ValidationException("Пользователя с этим номером не существует");
     }
+
+    public Film deleteLike(Integer id, Integer userId) {
+        if (inMemoryFilmStorage.getAllFilms().contains(id) ||
+                inMemoryUserStorage.getUsers().containsKey(userId)) {
+            Film film = inMemoryFilmStorage.getFilms().get(id);
+           User user = inMemoryUserStorage.getUsers().get(userId);
+            // if (film.getLike().contains(user)) {
+         //       throw new ValidationException("этот пользователь уже поставил лайк'");
+        //    }
+            Set<User> temp = film.getLike();
+            temp.remove(user);
+            film.setLike(temp);
+            int temp1 = film.getLikes();
+            film.setLikes(temp1 - 1);
+            return film;
+        }
+        throw new ValidationException("Пользователя или фильма с этим номером не существует");
+    }
+
+
+
+
+
+
 }
