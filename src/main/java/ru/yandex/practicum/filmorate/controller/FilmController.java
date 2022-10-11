@@ -65,9 +65,9 @@ public class FilmController {
         return inMemoryFilmStorage.getAllFilms();
     }
 
-    @GetMapping("films/popular/count/{count}")
+    @GetMapping("/films")
     public List<Film> getPopularFilms(
-            @PathVariable("count") Integer count) {
+            @RequestParam(defaultValue = "10", required = false)  Integer count) {
        return  filmService.findPopular(count);
    }
 
