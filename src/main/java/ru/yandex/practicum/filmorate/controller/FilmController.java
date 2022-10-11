@@ -65,11 +65,11 @@ public class FilmController {
         return inMemoryFilmStorage.getAllFilms();
     }
 
-  //  @GetMapping("films/popular?count={count}")
-  //  public List<Film> getPopularFilms() {
-//
- //       return  filmService.getPopular();
- //   }
+    @GetMapping("films/popular/count/{count}")
+    public List<Film> getPopularFilms(
+            @PathVariable("count") Integer count) {
+       return  filmService.findPopular(count);
+   }
 
 
 

@@ -7,10 +7,8 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 
 @Service
 public class FilmService {
@@ -45,7 +43,7 @@ public class FilmService {
         if (inMemoryFilmStorage.getAllFilms().contains(id) ||
                 inMemoryUserStorage.getUsers().containsKey(userId)) {
             Film film = inMemoryFilmStorage.getFilms().get(id);
-           User user = inMemoryUserStorage.getUsers().get(userId);
+            User user = inMemoryUserStorage.getUsers().get(userId);
             Set<User> temp = film.getLike();
             temp.remove(user);
             film.setLike(temp);
@@ -56,12 +54,26 @@ public class FilmService {
         throw new ValidationException("Пользователя или фильма с этим номером не существует");
     }
 
-  //  public List<Film> getPopular() {
 
+    public List<Film> findPopular(int count) {
 
- //   }
+        List<Film> temp = inMemoryFilmStorage.getAllFilms();
+        FilmLikeComparator filmLikeComparator = new FilmLikeComparator();
+        temp.sort(filmLikeComparator);
+        List<Film> head= temp.subList(0,count);
+        return  head;
 
-
+    }
 
 
 }
+
+
+class FilmLikeComparator implements Comparator<Film> { // на месте T - класс Item
+
+    @Override
+    public int compare(Film item1, Film item2) {
+        return Integer.compare(item2.getLikes(), item1.getLikes());
+    }
+}
+
