@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.*;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
@@ -15,18 +18,31 @@ import java.util.List;
 @RestController
 @RequestMapping("/films")
 public class FilmController {
+    public final  FilmStorage  inMemoryFilmStorage;
+    private final FilmService filmService;
 
-    public FilmController(FilmStorage inMemoryFilmStorage) {
+    public FilmController(FilmStorage inMemoryFilmStorage, FilmService filmService) {
         this.inMemoryFilmStorage = inMemoryFilmStorage;
+        this.filmService = filmService;
     }
 
-    public final  FilmStorage  inMemoryFilmStorage;
+
 
     @PostMapping()
     public Film createFilm(@Valid @RequestBody Film film) {
         return  inMemoryFilmStorage.createFilm(film);
 
     }
+
+
+    @PostMapping("films/{id}/like/{userId}")
+    public  Film addLike(@PathVariable("id") Integer id, @PathVariable("userId") Integer friendId) {
+        return filmService.addLike(id, friendId);
+    }
+
+
+
+
 
     @PutMapping()
     public Film updateFilm(@Valid @RequestBody Film film) {

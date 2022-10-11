@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -17,7 +18,8 @@ import java.util.*;
 
 @Service
 public class InMemoryFilmStorage implements FilmStorage {
-
+    private int likes;
+    private Set<User> like = new HashSet<>();
     private final Map<Integer, Film> films = new HashMap<>();
     private int id = 1;
     private  final Logger log = LoggerFactory.getLogger(FilmController.class);
@@ -29,6 +31,8 @@ public class InMemoryFilmStorage implements FilmStorage {
             validateDateOfReliseFilm(film);
             validateFilmId(film);
             film.setId(id++);
+            film.setLikes(0);
+            film.setLike(like);
             films.put(film.getId(), film);
             log.info("Фильм с id {} добавлен ", film.getId());
             return film;
@@ -90,7 +94,11 @@ public class InMemoryFilmStorage implements FilmStorage {
              throw new ValidationException("Фильм - " + film.getName() + " c id - " + film.getId() + " уже существует");
          }
      }
+
+    public Map<Integer, Film> getFilms() {
+        return films;
     }
+}
 
 
 
