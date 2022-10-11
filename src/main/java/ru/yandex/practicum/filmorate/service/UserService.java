@@ -61,7 +61,7 @@ public class UserService {
             user2.setFriends(temp2);
             return user;
         }
-        throw new ValidationException("Пользователя с этим номером не существует");
+        throw new ValidationException(" Пользователя с этим номером не существует");
     }
 
 
