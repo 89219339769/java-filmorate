@@ -47,6 +47,12 @@ public class FilmController {
 
 
 
+
+
+
+
+
+
     @PutMapping()
     public Film updateFilm(@Valid @RequestBody Film film) {
 
@@ -58,6 +64,15 @@ public class FilmController {
 
         return inMemoryFilmStorage.getAllFilms();
     }
+
+  //  @GetMapping("films/popular?count={count}")
+  //  public List<Film> getPopularFilms() {
+//
+ //       return  filmService.getPopular();
+ //   }
+
+
+
 
     @GetMapping("film/{id}")
     public Film findFilm(@PathVariable("id") Integer id) {

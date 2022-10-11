@@ -19,7 +19,7 @@ import java.util.*;
 @Service
 public class InMemoryFilmStorage implements FilmStorage {
     private int likes;
-    private Set<User> like = new HashSet<>();
+  //  private Set<User> like = new HashSet<>();
     private final Map<Integer, Film> films = new HashMap<>();
     private int id = 1;
     private  final Logger log = LoggerFactory.getLogger(FilmController.class);
@@ -32,6 +32,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             validateFilmId(film);
             film.setId(id++);
             film.setLikes(0);
+            Set<User> like = new HashSet<>();
             film.setLike(like);
             films.put(film.getId(), film);
             log.info("Фильм с id {} добавлен ", film.getId());
