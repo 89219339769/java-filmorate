@@ -49,15 +49,16 @@ public class UserService {
     public User deleteFriend(Integer id, Integer friendId) {
         if (inMemoryUserStorage.getUsers().containsKey(id) ||
                 inMemoryUserStorage.getUsers().containsKey(friendId)) {
-            Set<Integer> friends = new HashSet<>();
-            Set<Integer> friends2 = new HashSet<>();
 
             User user = inMemoryUserStorage.getUsers().get(id);
-            friends.remove(friendId);
-            user.setFriends(friends);
+            Set<Integer> temp = user.getFriends();
+            temp.remove(friendId);
+            user.setFriends(temp);
+
             User user2 = inMemoryUserStorage.getUsers().get(friendId);
-            friends2.remove(id);
-            user2.setFriends(friends2);
+            Set<Integer> temp2 = user.getFriends();
+            temp2.remove(id);
+            user2.setFriends(temp2);
             return user;
         }
         throw new ValidationException("Пользователя с этим номером не существует");
