@@ -7,7 +7,9 @@ import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -70,20 +72,39 @@ public class UserService {
     }
 
 
-    public Set<Integer> findCommonFriends(Integer id, Integer otherId) {
-        if (inMemoryUserStorage.getUsers().containsKey(id) ||
-                inMemoryUserStorage.getUsers().containsKey(otherId)) {
-            User user = inMemoryUserStorage.getUsers().get(id);
-            User userOther = inMemoryUserStorage.getUsers().get(otherId);
-            Set<Integer> userfriends = new HashSet<>();
-            Set<Integer> userOtherfriends = new HashSet<>();
-            userfriends = user.getFriends();
-            userOtherfriends = userOther.getFriends();
-            Set<Integer> common = findCommonElements(userfriends, userOtherfriends);
-            return common;
+  //  public Set<Integer> findCommonFriends(Integer id, Integer otherId) {
+   //     if (inMemoryUserStorage.getUsers().containsKey(id) ||
+      //          inMemoryUserStorage.getUsers().containsKey(otherId)) {
+    //        User user = inMemoryUserStorage.getUsers().get(id);
+     //       User userOther = inMemoryUserStorage.getUsers().get(otherId);
+     //       Set<Integer> userfriends = new HashSet<>();
+     //       Set<Integer> userOtherfriends = new HashSet<>();
+    //        userfriends = user.getFriends();
+    //        userOtherfriends = userOther.getFriends();
+     //       Set<Integer> common = findCommonElements(userfriends, userOtherfriends);
+     //       return common;
+  //      }
+  //      throw new ValidationException("Пользователя с этим номером не существует");
+ //   }
+
+
+    public List<User> findCommonFriends(int idUser, int idOther){
+        List<User> commonFriends = new ArrayList<>();
+        User user = inMemoryUserStorage.findUserById(idUser);
+        User otherUser = inMemoryUserStorage.findUserById(idOther);
+        for (Integer friend : user.getFriends()) {
+            if (otherUser.getFriends().contains(friend)) {
+                commonFriends.add(inMemoryUserStorage.findUserById(friend));
+            }
         }
-        throw new ValidationException("Пользователя с этим номером не существует");
+        return commonFriends;
     }
+
+
+
+
+
+
 
     private static <T> Set<T> findCommonElements(Set<T> first, Set<T> second) {
         Set<T> common = new HashSet<>(first);

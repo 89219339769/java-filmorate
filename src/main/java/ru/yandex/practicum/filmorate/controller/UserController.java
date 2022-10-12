@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}/friends/common/{otherId}")
-    public Set<Integer> findCommonFriends(@PathVariable("id")Integer id,@PathVariable("otherId") Integer otherId) {
+    public List<User> findCommonFriends(@PathVariable("id")Integer id, @PathVariable("otherId") Integer otherId) {
         return userService.findCommonFriends(id,otherId);
     }
 
