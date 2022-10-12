@@ -44,6 +44,26 @@ public class InMemoryUserStorage implements UserStorage {
     @PostMapping
     public User create(@Valid @RequestBody User user) {
         validateUserPost(user);
+
+        if (user.getName().isEmpty()) {
+            log.info("имя будет логином.");
+            String temp = user.getLogin();
+            user.setName(temp);
+
+            String string = user.getEmail();
+            char[] chArray = string.toCharArray();
+            Character ch2 = '@';
+            for (int i = 0; i < chArray.length; i++) {
+                if (chArray[i] == ch2) {
+
+                    user.setId(id++);
+                    user.setFriends(defoultfriends);
+                    users.put(user.getId(), user);
+                    log.info("Фильм с id {} добавлен ", user.getId());
+                    return user;
+                }
+            }
+        }
         String string = user.getEmail();
         char[] chArray = string.toCharArray();
         Character ch2 = '@';
@@ -101,6 +121,8 @@ public class InMemoryUserStorage implements UserStorage {
             user.setName(temp2);
             log.info("логин будет использоваться как имя.");
         }
+
+
         if (user.getEmail().isBlank()) {
             log.info("почтовый адрес не может быть пустым.");
             throw new ValidationException("почтовый адрес не может быть пустым.");
