@@ -23,26 +23,32 @@ public class UserService {
         this.inMemoryUserStorage = inMemoryUserStorage;
     }
 
-    public User addFriend(Integer id, Integer friendId) {
-        if (inMemoryUserStorage.getUsers().containsKey(id) ||
-                inMemoryUserStorage.getUsers().containsKey(friendId)) {
+   // public User addFriend(Integer id, Integer friendId) {
+      //  if (inMemoryUserStorage.getUsers().containsKey(id) ||
+       //         inMemoryUserStorage.getUsers().containsKey(friendId)) {
 
-            Set<Integer>friends = new HashSet<>();
-            Set<Integer>friends2 = new HashSet<>();
+      //      Set<Integer>friends = new HashSet<>();
+       //     Set<Integer>friends2 = new HashSet<>();
 
-            User user = inMemoryUserStorage.getUsers().get(id);
-            Set<Integer> temp = user.getFriends();
-            friends.add(friendId);
-            user.setFriends(mergeSets(temp, friends));
+     //       User user = inMemoryUserStorage.getUsers().get(id);
+     //       Set<Integer> temp = user.getFriends();
+      //      friends.add(friendId);
+      //      user.setFriends(mergeSets(temp, friends));
 
-            User user2 = inMemoryUserStorage.getUsers().get(friendId);
-            Set<Integer> temp2 = user2.getFriends();
-            friends2.add(id);
-            user2.setFriends(mergeSets(temp2, friends2));
-            return user;
-        }
-        throw new ValidationException("Пользователя с этим номером не существует");
-    }
+       //     User user2 = inMemoryUserStorage.getUsers().get(friendId);
+       //     Set<Integer> temp2 = user2.getFriends();
+      //      friends2.add(id);
+     //       user2.setFriends(mergeSets(temp2, friends2));
+     //       return user;
+   //     }
+  //      throw new ValidationException("Пользователя с этим номером не существует");
+ //   }
+       public void addFriends(int idUser, int idFriends){
+           User user = inMemoryUserStorage.findUserById(idUser);
+           User friend = inMemoryUserStorage.findUserById(idFriends);
+           user.getFriends().add(idFriends);
+           friend.getFriends().add(idUser);
+       }
 
     public User deleteFriend(Integer id, Integer friendId) {
         if (inMemoryUserStorage.getUsers().containsKey(id) ||
