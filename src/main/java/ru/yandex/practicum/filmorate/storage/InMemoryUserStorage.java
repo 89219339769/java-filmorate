@@ -109,7 +109,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     public void validateUserPut(User user) {
         if (!users.containsKey(user.getId())) {
-            throw new ValidationException("Пользователь - " + user.getName() + " c id - " + user.getId() + " не существует");
+            throw new  FilmUserNotFoundException("Пользователь - " + user.getName() + " c id - " + user.getId() + " не существует");
         }
 
         if (user.getId() < 0) {
