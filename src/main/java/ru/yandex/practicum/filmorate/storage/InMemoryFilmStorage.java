@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.controller.FilmController;
+import ru.yandex.practicum.filmorate.exceptions.FilmUserNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
@@ -63,7 +64,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             Film  film = films.get(id);
             return film;
         }
-        throw new ValidationException("Фильма с этим номером не существует");
+        throw new FilmUserNotFoundException("Такого фильма нет");
     }
 
 
@@ -72,7 +73,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
      public void validateFilmPut(Film film) {
             if (!films.containsKey(film.getId())) {
-                throw new ValidationException("Фильм - " + film.getName() + " c id - " + film.getId() + " не существует");
+                throw new FilmUserNotFoundException("Фильм - " + film.getName() + " c id - " + film.getId() + " не существует");
             }
         }
 

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.controller.UserController;
+import ru.yandex.practicum.filmorate.exceptions.FilmUserNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
@@ -34,7 +35,7 @@ public class InMemoryUserStorage implements UserStorage {
             User user = users.get(id);
             return user;
         }
-        throw new ValidationException("Пользователя с этим номером не существует");
+        throw new FilmUserNotFoundException("Пользователя с этим номером не существует");
     }
 
 
@@ -112,7 +113,7 @@ public class InMemoryUserStorage implements UserStorage {
         }
 
         if (user.getId() < 0) {
-            throw new ValidationException("Id не может быть отрицательным.");
+            throw new FilmUserNotFoundException("Id не может быть отрицательным.");
         }
 
         if (user.getEmail() == null || user.getEmail().isBlank()) {
