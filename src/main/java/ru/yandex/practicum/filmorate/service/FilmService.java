@@ -1,79 +1,52 @@
 package ru.yandex.practicum.filmorate.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
+import ru.yandex.practicum.filmorate.exceptions.FilmUserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
-
-import java.util.*;
-
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FilmService {
-    public final InMemoryUserStorage inMemoryUserStorage;
-    public final InMemoryFilmStorage inMemoryFilmStorage;
+    private final FilmStorage inMemoryFilmStorage;
+    private final UserStorage inMemoryUserStorage;
 
-    public FilmService(InMemoryUserStorage inMemoryUserStorage, InMemoryFilmStorage inMemoryFilmStorage) {
-        this.inMemoryUserStorage = inMemoryUserStorage;
+    @Autowired
+    public FilmService(FilmStorage inMemoryFilmStorage, UserStorage inMemoryUserStorage) {
         this.inMemoryFilmStorage = inMemoryFilmStorage;
+        this.inMemoryUserStorage = inMemoryUserStorage;
     }
 
+    public void addLike(int idUser, int idFilm){
+        Film film = inMemoryFilmStorage.findFilmById(idFilm);
+        User user = inMemoryUserStorage.findUserById(idUser);
+        film.setLike(user.getId());
+    }
 
-    public Film addLike(Integer id, Integer userId) {
-        if (inMemoryFilmStorage.getAllFilms().contains(id) ||
-                inMemoryUserStorage.getUsers().containsKey(userId)) {
-            Film film = inMemoryFilmStorage.getFilms().get(id);
-            User user = inMemoryUserStorage.getUsers().get(userId);
-            if (film.getLike().contains(user)) {
-                throw new ValidationException("этот пользователь уже поставил лайк'");
-            }
-            Set<User> temp = film.getLike();
-            temp.add(user);
-            film.setLike(temp);
-            int temp1 = film.getLikes();
-            film.setLikes(temp1 + 1);
-            return film;
+    public void deleteLike(int idFilm, int idUser){
+        Film film = inMemoryFilmStorage.findFilmById(idFilm);
+        User user = inMemoryUserStorage.findUserById(idUser);
+        film.getLike().remove(user.getId());
+    }
+
+    public List<Film> bestFilmByLike(Integer count){
+        return inMemoryFilmStorage.getAllFilms().stream()
+                .sorted((o1, o2) -> {
+                    int result = Integer.valueOf(o1.getLike().size()).compareTo(Integer.valueOf(o2.getLike().size()));
+                    return result * -1;
+                }).limit(count)
+                .collect(Collectors.toList());
+    }
+
+    public Film findFilmById(int id){
+        if (id <= 0){
+            throw new FilmUserNotFoundException(String.format("Фильм с id %s не найден", id));
         }
-        throw new ValidationException("Пользователя с этим номером не существует");
-    }
-
-    public Film deleteLike(Integer id, Integer userId) {
-        if (inMemoryFilmStorage.getAllFilms().contains(id) ||
-                inMemoryUserStorage.getUsers().containsKey(userId)) {
-            Film film = inMemoryFilmStorage.getFilms().get(id);
-            User user = inMemoryUserStorage.getUsers().get(userId);
-            Set<User> temp = film.getLike();
-            temp.remove(user);
-            film.setLike(temp);
-            int temp1 = film.getLikes();
-            film.setLikes(temp1 - 1);
-            return film;
-        }
-        throw new ValidationException("Пользователя или фильма с этим номером не существует");
-    }
-
-
-    public List<Film> findPopular(int count) {
-
-        List<Film> temp = inMemoryFilmStorage.getAllFilms();
-        FilmLikeComparator filmLikeComparator = new FilmLikeComparator();
-        temp.sort(filmLikeComparator);
-        List<Film> head= temp.subList(0,count);
-        return  head;
-
-    }
-
-
-}
-
-
-class FilmLikeComparator implements Comparator<Film> { // на месте T - класс Item
-
-    @Override
-    public int compare(Film item1, Film item2) {
-        return Integer.compare(item2.getLikes(), item1.getLikes());
+        Film film = inMemoryFilmStorage.getAllFilms().get(id);
+        return film;
     }
 }
-

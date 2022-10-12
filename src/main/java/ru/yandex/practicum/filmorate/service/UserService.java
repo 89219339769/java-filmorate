@@ -1,99 +1,48 @@
 package ru.yandex.practicum.filmorate.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
-
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
+// для работы с друзьями пользователя
 @Service
 public class UserService {
+    private final UserStorage inMemoryUserStorage;
 
-    public final InMemoryUserStorage inMemoryUserStorage;
-
-    public UserService(InMemoryUserStorage inMemoryUserStorage) {
+    @Autowired
+    public UserService(UserStorage inMemoryUserStorage) {
         this.inMemoryUserStorage = inMemoryUserStorage;
     }
 
-   // public User addFriend(Integer id, Integer friendId) {
-      //  if (inMemoryUserStorage.getUsers().containsKey(id) ||
-       //         inMemoryUserStorage.getUsers().containsKey(friendId)) {
-
-      //      Set<Integer>friends = new HashSet<>();
-       //     Set<Integer>friends2 = new HashSet<>();
-
-     //       User user = inMemoryUserStorage.getUsers().get(id);
-     //       Set<Integer> temp = user.getFriends();
-      //      friends.add(friendId);
-      //      user.setFriends(mergeSets(temp, friends));
-
-       //     User user2 = inMemoryUserStorage.getUsers().get(friendId);
-       //     Set<Integer> temp2 = user2.getFriends();
-      //      friends2.add(id);
-     //       user2.setFriends(mergeSets(temp2, friends2));
-     //       return user;
-   //     }
-  //      throw new ValidationException("Пользователя с этим номером не существует");
- //   }
-       public void addFriends(int idUser, int idFriends){
-           User user = inMemoryUserStorage.findUserById(idUser);
-           User friend = inMemoryUserStorage.findUserById(idFriends);
-           user.getFriends().add(idFriends);
-           friend.getFriends().add(idUser);
-       }
-
-    public User deleteFriend(Integer id, Integer friendId) {
-        if (inMemoryUserStorage.getUsers().containsKey(id) ||
-                inMemoryUserStorage.getUsers().containsKey(friendId)) {
-
-            User user = inMemoryUserStorage.getUsers().get(id);
-            Set<Integer> temp = user.getFriends();
-            temp.remove(friendId);
-            user.setFriends(temp);
-
-            User user2 = inMemoryUserStorage.getUsers().get(friendId);
-            Set<Integer> temp2 = user.getFriends();
-            temp2.remove(id);
-            user2.setFriends(temp2);
-            return user;
-        }
-        throw new ValidationException(" Пользователя с этим номером не существует");
+    //Добавляет друзей в список
+    public void addFriends(int idUser, int idFriends){
+        User user = inMemoryUserStorage.findUserById(idUser);
+        User friend = inMemoryUserStorage.findUserById(idFriends);
+        user.getFriends().add(idFriends);
+        friend.getFriends().add(idUser);
     }
 
-
-    public Set<Integer> findAllfriends(Integer id) {
-        if (inMemoryUserStorage.getUsers().containsKey(id)) {
-            User user = inMemoryUserStorage.getUsers().get(id);
-            return user.getFriends();
-        }
-        throw new ValidationException("Пользователя с этим номером не существует");
+    //Удаляет друзей из списка
+    public void deleteFriends(int idUser, int idFriends){
+        inMemoryUserStorage.findUserById(idUser).getFriends().remove(idFriends);
+        inMemoryUserStorage.findUserById(idFriends).getFriends().remove(idUser);
     }
 
+    public List<User> findAllFriends(Integer idUser){
+        List<User> friends = new ArrayList<>();
+        User user = inMemoryUserStorage.findUserById(idUser);
+        if (user.getFriends() != null){
+            for (Integer id : user.getFriends()){
+                friends.add(inMemoryUserStorage.findUserById(id));
+            }
+        }
+        return friends;
+    }
 
-  //  public Set<Integer> findCommonFriends(Integer id, Integer otherId) {
-   //     if (inMemoryUserStorage.getUsers().containsKey(id) ||
-      //          inMemoryUserStorage.getUsers().containsKey(otherId)) {
-    //        User user = inMemoryUserStorage.getUsers().get(id);
-     //       User userOther = inMemoryUserStorage.getUsers().get(otherId);
-     //       Set<Integer> userfriends = new HashSet<>();
-     //       Set<Integer> userOtherfriends = new HashSet<>();
-    //        userfriends = user.getFriends();
-    //        userOtherfriends = userOther.getFriends();
-     //       Set<Integer> common = findCommonElements(userfriends, userOtherfriends);
-     //       return common;
-  //      }
-  //      throw new ValidationException("Пользователя с этим номером не существует");
- //   }
-
-
+    //ищет общих друзей
     public List<User> findCommonFriends(int idUser, int idOther){
         List<User> commonFriends = new ArrayList<>();
         User user = inMemoryUserStorage.findUserById(idUser);
@@ -105,30 +54,4 @@ public class UserService {
         }
         return commonFriends;
     }
-
-
-
-
-
-
-
-    private static <T> Set<T> findCommonElements(Set<T> first, Set<T> second) {
-        Set<T> common = new HashSet<>(first);
-        common.retainAll(second);
-        return common;
-    }
-
-
-
-    public static<T> Set<T> mergeSets(Set<T> a, Set<T> b)
-    {
-        return Stream.of(a, b)
-                .flatMap(x -> x.stream())
-                .collect(Collectors.toSet());
-    }
-
 }
-
-
-
-
