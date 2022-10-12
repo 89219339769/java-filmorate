@@ -42,7 +42,7 @@ public class UserController {
     }
 
 
-    @GetMapping("{id}")
+    @GetMapping("/users/{id}")
     public User findUser(@PathVariable("id") Integer id) {
         return inMemoryUserStorage.findUserById(id);
     }
