@@ -11,7 +11,7 @@ public class User {
     private Integer id;
     @NotBlank @Email
     private final String email;
-    @NotBlank @Pattern(regexp = "\\S+")
+   // @NotBlank @Pattern(regexp = "\\S+")
     private final String login;
     private String name;
     @NotNull

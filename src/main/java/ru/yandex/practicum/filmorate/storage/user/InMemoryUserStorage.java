@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.storage.user;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.yandex.practicum.filmorate.exceptions.FilmUserNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -31,6 +32,14 @@ public class InMemoryUserStorage implements UserStorage {
             log.warn("дата рождения не может быть в будущем");
             throw new ValidationException("дата рождения не может быть в будущем");
         }
+        String temp = user.getLogin();
+        if (temp.contains(" ")) {
+            log.info("логин не млжет быть пустым или с пробелами.");
+            throw new ValidationException("Некоректные данные ");
+        }
+
+
+
         return true;
     }
 

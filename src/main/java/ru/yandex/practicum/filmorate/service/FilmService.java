@@ -47,6 +47,10 @@ public class FilmService {
             throw new FilmUserNotFoundException(String.format("Фильм с id %s не найден", id));
         }
         Film film = inMemoryFilmStorage.getAllFilms().get(id);
+        if (!inMemoryFilmStorage.getAllFilms().contains(film)){
+            throw new FilmUserNotFoundException(String.format("Фильм с id %s не найден", id));
+        }
+
         return film;
     }
 }

@@ -28,9 +28,9 @@ public class HandlerException {
         return new ErrorResponse("Некоректные данные " + e.getStackTrace());
     }
 
-    @ExceptionHandler(Throwable.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleThrowable(final Throwable e){
-        return new ErrorResponse("Непредвиденное исключение " + e.getStackTrace());
-    }
+   @ExceptionHandler(Throwable.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+   public ErrorResponse handleThrowable(final IndexOutOfBoundsException e){
+       return new ErrorResponse("Непредвиденное исключение " + e.getStackTrace());
+   }
 }
