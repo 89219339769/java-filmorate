@@ -16,62 +16,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/films")
-public class FilmController {
-    public final  FilmStorage  inMemoryFilmStorage;
-    private final FilmService filmService;
 
+public class FilmController {
+    public final FilmStorage inMemoryFilmStorage;
+    private final FilmService filmService;
+    @Autowired
     public FilmController(FilmStorage inMemoryFilmStorage, FilmService filmService) {
         this.inMemoryFilmStorage = inMemoryFilmStorage;
         this.filmService = filmService;
     }
 
 
-
-    @PostMapping()
+    @PostMapping("/films")
     public Film createFilm(@Valid @RequestBody Film film) {
-        return  inMemoryFilmStorage.createFilm(film);
+        return inMemoryFilmStorage.createFilm(film);
 
     }
 
 
-    @PostMapping("films/{id}/like/{userId}")
-    public  Film addLike(@PathVariable("id") Integer id, @PathVariable("userId") Integer friendId) {
+    @PutMapping("/films/{id}/like/{userId}")
+    public Film addLike(@PathVariable("id") Integer id, @PathVariable("userId") Integer friendId) {
         return filmService.addLike(id, friendId);
     }
 
-    @DeleteMapping ("films/{id}/like/{userId}")
-    public  Film deleteLike(@PathVariable("id") Integer id, @PathVariable("userId") Integer friendId) {
+    @DeleteMapping("/films/{id}/like/{userId}")
+    public Film deleteLike(@PathVariable("id") Integer id, @PathVariable("userId") Integer friendId) {
         return filmService.deleteLike(id, friendId);
     }
 
 
-
-
-
-
-
-
-
-    @PutMapping()
+    @PutMapping("/films")
     public Film updateFilm(@Valid @RequestBody Film film) {
 
         return inMemoryFilmStorage.updateFilm(film);
     }
 
-    @GetMapping()
+    @GetMapping("/films")
     public List<Film> getAllFilms() {
 
         return inMemoryFilmStorage.getAllFilms();
     }
 
-    @GetMapping("/films")
+    @GetMapping("/films/popular")
     public List<Film> getPopularFilms(
-            @RequestParam(defaultValue = "10", required = false)  Integer count) {
-       return  filmService.findPopular(count);
-   }
-
-
+            @RequestParam(defaultValue = "10", required = false) Integer count) {
+        return filmService.findPopular(count);
+    }
 
 
     @GetMapping("film/{id}")
