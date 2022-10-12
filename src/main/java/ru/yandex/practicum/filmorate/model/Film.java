@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 import org.springframework.validation.annotation.Validated;
@@ -11,15 +12,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
+
 public class Film {
     private Integer id;
     @NotBlank
     private final String name;
-    @NotBlank @Size(max = 200)
+   @NotBlank @Size(max = 200)
     private final String description;
     @NotNull
-    private final LocalDate releaseDate;
-    @NotNull
+    private LocalDate releaseDate;
+   @NotNull
     private final Integer duration;
     private Set<Integer> like;
 
@@ -48,4 +50,9 @@ public class Film {
     public void setLike(int idUser) {
         this.like.add(idUser);
     }
+    public void setReleaseDate(LocalDate releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+
 }

@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @Slf4j
 public class FilmController {
-    private final FilmStorage inMemoryFilmStorage;
+    public final FilmStorage inMemoryFilmStorage;
     private final FilmService filmService;
 
     @Autowired

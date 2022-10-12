@@ -22,8 +22,8 @@ public class InMemoryFilmStorage implements FilmStorage{
     public InMemoryFilmStorage() {
         films = new HashMap<>();
     }
-
-    private boolean checkValidationFilm(Film film) throws ValidationException {
+    @Override
+    public boolean checkValidationFilm(Film film) throws ValidationException {
         if (film.getReleaseDate().isBefore(MIN_DATE_START_RELEASE)){
             log.info("Ошибка валидации: дата релиза — раньше 28 декабря 1895 года");
             throw new ValidationException("дата релиза раньше 28 декабря 1895 года");

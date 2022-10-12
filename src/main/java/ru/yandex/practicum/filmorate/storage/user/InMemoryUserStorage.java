@@ -26,8 +26,8 @@ public class InMemoryUserStorage implements UserStorage {
     private static Integer createNextId(){
         return globalIdUser++;
     }
-
-    private boolean checkValidationUser(User user){
+@Override
+public boolean checkValidationUser(User user){
         if (user.getBirthday().isAfter(LocalDate.now())){
             log.warn("дата рождения не может быть в будущем");
             throw new ValidationException("дата рождения не может быть в будущем");

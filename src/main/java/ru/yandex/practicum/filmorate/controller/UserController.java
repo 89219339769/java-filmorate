@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @Slf4j
 public class UserController {
-    private final UserStorage inMemoryUserStorage;
+    public final UserStorage inMemoryUserStorage;
     private final UserService userService;
 
     @Autowired

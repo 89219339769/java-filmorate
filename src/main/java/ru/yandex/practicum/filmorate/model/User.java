@@ -6,16 +6,17 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+
 @Data
 public class User {
     private Integer id;
     @NotBlank @Email
-    private final String email;
+    private  String email;
    // @NotBlank @Pattern(regexp = "\\S+")
-    private final String login;
+    private  String login;
     private String name;
     @NotNull
-    private final LocalDate birthday;
+    private  LocalDate birthday;
     private Set<Integer> friends = new HashSet<>();
 
     public User(String email, String name, String login, LocalDate birthday) {
@@ -39,5 +40,17 @@ public class User {
 
     public Set<Integer> getFriends() {
         return friends;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
     }
 }
