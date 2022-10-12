@@ -35,13 +35,13 @@ public class UserController {
         return userService.findAllfriends(id);
     }
 
-    @GetMapping("users/{id}/friends/common/{otherId}")
+    @GetMapping("{id}/friends/common/{otherId}")
     public Set<Integer> findCommonFriends(@PathVariable("id")Integer id,@PathVariable("otherId") Integer otherId) {
         return userService.findCommonFriends(id,otherId);
     }
 
 
-    @GetMapping("user/{id}")
+    @GetMapping("{id}")
     public User findUser(@PathVariable("id") Integer id) {
         return inMemoryUserStorage.findUserById(id);
     }

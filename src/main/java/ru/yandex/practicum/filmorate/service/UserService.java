@@ -28,19 +28,15 @@ public class UserService {
             Set<Integer>friends = new HashSet<>();
             Set<Integer>friends2 = new HashSet<>();
 
-
             User user = inMemoryUserStorage.getUsers().get(id);
             Set<Integer> temp = user.getFriends();
             friends.add(friendId);
             user.setFriends(mergeSets(temp, friends));
 
-
-
             User user2 = inMemoryUserStorage.getUsers().get(friendId);
             Set<Integer> temp2 = user2.getFriends();
             friends2.add(id);
             user2.setFriends(mergeSets(temp2, friends2));
-
             return user;
         }
         throw new ValidationException("Пользователя с этим номером не существует");
