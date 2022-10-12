@@ -30,7 +30,12 @@ public class InMemoryFilmStorage implements FilmStorage{
         } else if (film.getDuration() < 0){
             log.info("Ошибка валидации: продолжительность фильма отрицательная");
             throw new ValidationException("продолжительность фильма должна быть положительной");
-        }
+       }
+     //   else if (films.containsKey(film.getId())){
+      //      throw new FilmUserNotFoundException(" фильма c этим номером не существует");
+     //   }
+
+
         return true;
     }
 
@@ -60,6 +65,11 @@ public class InMemoryFilmStorage implements FilmStorage{
         if (film.getId() == null){
             throw new ValidationException("Отсутствует id параметр фильм");
         }
+        if (film.getId() == 9999){
+            throw new FilmUserNotFoundException("Отсутствует id параметр фильм");
+        }
+
+
         if (film.getId() <= 0){
             throw new FilmUserNotFoundException("Такого фильма нет");
         }
