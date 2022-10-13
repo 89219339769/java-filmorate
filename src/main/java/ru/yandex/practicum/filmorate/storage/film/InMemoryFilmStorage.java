@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class InMemoryFilmStorage implements FilmStorage{
     private final Map<Integer, Film> films;
     private final static LocalDate MIN_DATE_START_RELEASE = LocalDate.parse("1895-12-28");
-    private static Integer globalIdFilm = 1;
+    private  Integer globalIdFilm = 1;
 
     public InMemoryFilmStorage() {
         films = new HashMap<>();
@@ -35,7 +35,7 @@ public class InMemoryFilmStorage implements FilmStorage{
         return true;
     }
 
-    private static Integer createNextId(){
+    private Integer createNextId(){
         return globalIdFilm++;
     }
 

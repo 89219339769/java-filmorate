@@ -19,9 +19,6 @@ public class InMemoryUserStorage implements UserStorage {
     private final Map<Integer, User> users = new HashMap<>();
     private  Integer globalIdUser = 1;
 
-    public Map<Integer, User> getUsers() {
-        return users;
-    }
 
     private Integer createNextId(){
         return globalIdUser++;
