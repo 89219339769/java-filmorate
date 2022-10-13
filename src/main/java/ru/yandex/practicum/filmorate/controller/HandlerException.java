@@ -22,12 +22,6 @@ public class HandlerException {
         return new ErrorResponse(String.format(e.getMessage()));
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleThrowable(final MethodArgumentNotValidException e){
-        return new ErrorResponse("Некоректные данные " + e.getStackTrace());
-    }
-
    @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
    public ErrorResponse handleThrowable(final IndexOutOfBoundsException e){

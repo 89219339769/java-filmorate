@@ -61,9 +61,12 @@ public class InMemoryFilmStorage implements FilmStorage{
         if (film.getId() == null){
             throw new ValidationException("Отсутствует id параметр фильм");
         }
-        if (film.getId() == 9999){
-            throw new FilmUserNotFoundException("Отсутствует id параметр фильм");
-        }
+    //    if (film.getId() == 9999){
+     //       throw new FilmUserNotFoundException("Отсутствует id параметр фильм");
+     //   }
+
+        if(!films.containsKey(film.getId()))
+        { throw new FilmUserNotFoundException("фильма с этим номером нет, перезаписать невозможно");}
 
 
         if (film.getId() <= 0){
