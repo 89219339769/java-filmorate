@@ -38,8 +38,6 @@ public boolean checkValidationUser(User user){
             throw new ValidationException("Некоректные данные ");
         }
 
-
-
         return true;
     }
 

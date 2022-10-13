@@ -8,6 +8,7 @@ import java.util.Set;
 
 
 @Data
+@Builder
 public class User {
     private Integer id;
     @NotBlank @Email
@@ -19,7 +20,8 @@ public class User {
     private  LocalDate birthday;
     private Set<Integer> friends = new HashSet<>();
 
-    public User(String email, String name, String login, LocalDate birthday) {
+    public User(Integer id,String email, String name, String login, LocalDate birthday,Set<Integer> friends) {
+        this.id = id;
         this.email = email;
         this.login = login;
         if (name.isBlank()){
@@ -29,7 +31,6 @@ public class User {
         }
         this.birthday = birthday;
     }
-
     public Integer getId() {
         return id;
     }

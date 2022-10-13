@@ -6,7 +6,6 @@ public class ErrorResponse {
     public ErrorResponse(String textException) {
         this.textException = textException;
     }
-
     public String getTextException() {
         return textException;
     }
