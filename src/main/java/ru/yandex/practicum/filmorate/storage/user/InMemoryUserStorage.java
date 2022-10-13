@@ -17,13 +17,13 @@ import java.util.stream.Collectors;
 @Slf4j
 public class InMemoryUserStorage implements UserStorage {
     private final Map<Integer, User> users = new HashMap<>();
-    private static Integer globalIdUser = 1;
+    private  Integer globalIdUser = 1;
 
     public Map<Integer, User> getUsers() {
         return users;
     }
 
-    private static Integer createNextId(){
+    private Integer createNextId(){
         return globalIdUser++;
     }
 @Override
