@@ -22,17 +22,35 @@ public class FilmService {
     }
 
 
-
-
     public Film addFilm(Film film) {
-
        return inMemoryFilmStorage.addFilm(film) ;
+    }
 
+
+    public Film changeFilm(Film film){
+        return inMemoryFilmStorage.changeFilm(film) ;
+    }
+
+
+    public List<Film> getAllFilms(){
+        return inMemoryFilmStorage.getAllFilms();
+    }
+
+    public Film findFilmById(int idFilm){
+        return inMemoryFilmStorage.findFilmById(idFilm);
+    }
+
+    public void deleteFilm(Integer idFilm) {
+        inMemoryFilmStorage.deleteFilm(idFilm);
+    }
+    public boolean checkValidationFilm(Film film){
+
+       return inMemoryFilmStorage.checkValidationFilm(film);
     }
 
 
 
-    public void addLike(int idUser, int idFilm){
+        public void addLike(int idUser, int idFilm){
         Film film = inMemoryFilmStorage.findFilmById(idFilm);
         User user = inMemoryUserStorage.findUserById(idUser);
         film.setLike(user.getId());

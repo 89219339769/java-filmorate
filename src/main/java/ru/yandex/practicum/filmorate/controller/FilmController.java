@@ -13,11 +13,11 @@ import java.util.List;
 @RestController
 @Slf4j
 public class FilmController {
-    public final FilmStorage inMemoryFilmStorage;
-    private final FilmService filmService;
+
+    public final FilmService filmService;
 
     @Autowired
-    public FilmController(FilmStorage inMemoryFilmStorage, FilmService filmService) {this.inMemoryFilmStorage = inMemoryFilmStorage;
+    public FilmController(FilmService filmService) {
         this.filmService = filmService;
     }
 
@@ -28,19 +28,18 @@ public class FilmController {
 
     @PutMapping("/films")
     public Film changeFilm(@Valid @RequestBody Film film) throws ValidationException{
-        return inMemoryFilmStorage.changeFilm(film);
+        return filmService.changeFilm(film);
     }
 
     @GetMapping("/films")
     public List<Film> allFilms(){
-        return inMemoryFilmStorage.getAllFilms();
+        return filmService.getAllFilms();
     }
 
     @GetMapping("/films/{id}")
     public Film findFilmById(@PathVariable int id){
-        return  inMemoryFilmStorage.findFilmById(id);
+        return filmService.findFilmById(id);
     }
-
 
 
     @PutMapping("/films/{id}/like/{userId}")
@@ -61,6 +60,6 @@ public class FilmController {
 
     @DeleteMapping("/films/{id}")
     public void deleteFilm(@PathVariable Integer id){
-        inMemoryFilmStorage.deleteFilm(id);
+        filmService.deleteFilm(id);
     }
 }

@@ -35,7 +35,7 @@ public class FilmControllerTest {
         UserStorage inMemoryUserStorage = new InMemoryUserStorage();
         FilmService filmService = new FilmService(inMemoryFilmStorage,inMemoryUserStorage);
 
-        fc = new FilmController(inMemoryFilmStorage,filmService);
+        fc = new FilmController(filmService);
         Film film = getFilm();
         fc.addFilm(film);
     }
@@ -47,7 +47,7 @@ public class FilmControllerTest {
         updateFilm.setReleaseDate(LocalDate.of(1721, 1, 1));
         RuntimeException exception;
 
-        exception = assertThrows(ValidationException.class, () -> fc.inMemoryFilmStorage.checkValidationFilm(updateFilm));
+        exception = assertThrows(ValidationException.class, () -> fc.filmService.checkValidationFilm(updateFilm));
         assertEquals(exception.getMessage(), exception.getMessage(), "дата релиза раньше 28 декабря 1895 года");
     }
 
@@ -58,7 +58,7 @@ public class FilmControllerTest {
         updateFilm.setDuration(-90);
         RuntimeException exception;
 
-        exception = assertThrows(ValidationException.class, () -> fc.inMemoryFilmStorage.checkValidationFilm(updateFilm));
+        exception = assertThrows(ValidationException.class, () -> fc.filmService.checkValidationFilm(updateFilm));
         assertEquals(exception.getMessage(), exception.getMessage(), "продолжительность фильма должна быть положительной");
     }
 }
