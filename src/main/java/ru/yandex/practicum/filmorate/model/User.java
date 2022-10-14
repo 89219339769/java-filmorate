@@ -13,7 +13,6 @@ public class User {
     private Integer id;
     @NotBlank @Email
     private  String email;
-   // @NotBlank @Pattern(regexp = "\\S+")
     private  String login;
     private String name;
     @NotNull

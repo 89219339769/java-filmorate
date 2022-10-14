@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import java.util.ArrayList;
 import java.util.List;
 
-// для работы с друзьями пользователя
 @Service
 public class UserService {
     private final UserStorage inMemoryUserStorage;
@@ -68,7 +67,6 @@ public class UserService {
         return friends;
     }
 
-    //ищет общих друзей
     public List<User> findCommonFriends(int idUser, int idOther){
         List<User> commonFriends = new ArrayList<>();
         User user = inMemoryUserStorage.findUserById(idUser);
