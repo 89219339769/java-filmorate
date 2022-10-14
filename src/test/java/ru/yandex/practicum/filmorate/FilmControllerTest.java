@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.util.AssertionErrors.assertEquals;
 
 public class FilmControllerTest {
-    private FilmController uc;
+    private FilmController fc;
 
     private Film getFilm() {
         return Film.builder()
@@ -35,9 +35,9 @@ public class FilmControllerTest {
         UserStorage inMemoryUserStorage = new InMemoryUserStorage();
         FilmService filmService = new FilmService(inMemoryFilmStorage,inMemoryUserStorage);
 
-        uc = new FilmController(inMemoryFilmStorage,filmService);
+        fc = new FilmController(inMemoryFilmStorage,filmService);
         Film film = getFilm();
-        uc.addFilm(film);
+        fc.addFilm(film);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class FilmControllerTest {
         updateFilm.setReleaseDate(LocalDate.of(1721, 1, 1));
         RuntimeException exception;
 
-        exception = assertThrows(ValidationException.class, () -> uc.inMemoryFilmStorage.checkValidationFilm(updateFilm));
+        exception = assertThrows(ValidationException.class, () -> fc.inMemoryFilmStorage.checkValidationFilm(updateFilm));
         assertEquals(exception.getMessage(), exception.getMessage(), "дата релиза раньше 28 декабря 1895 года");
     }
 
@@ -58,7 +58,7 @@ public class FilmControllerTest {
         updateFilm.setDuration(-90);
         RuntimeException exception;
 
-        exception = assertThrows(ValidationException.class, () -> uc.inMemoryFilmStorage.checkValidationFilm(updateFilm));
+        exception = assertThrows(ValidationException.class, () -> fc.inMemoryFilmStorage.checkValidationFilm(updateFilm));
         assertEquals(exception.getMessage(), exception.getMessage(), "продолжительность фильма должна быть положительной");
     }
 }
