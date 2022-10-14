@@ -17,14 +17,13 @@ public class FilmController {
     private final FilmService filmService;
 
     @Autowired
-    public FilmController(FilmStorage inMemoryFilmStorage, FilmService filmService) {
-        this.inMemoryFilmStorage = inMemoryFilmStorage;
+    public FilmController(FilmStorage inMemoryFilmStorage, FilmService filmService) {this.inMemoryFilmStorage = inMemoryFilmStorage;
         this.filmService = filmService;
     }
 
     @PostMapping("/films")
     public Film addFilm(@Valid @RequestBody Film film) throws ValidationException {
-        return inMemoryFilmStorage.addFilm(film);
+        return filmService.addFilm(film);
     }
 
     @PutMapping("/films")
@@ -39,8 +38,10 @@ public class FilmController {
 
     @GetMapping("/films/{id}")
     public Film findFilmById(@PathVariable int id){
-        return filmService.findFilmById(id);
+        return  inMemoryFilmStorage.findFilmById(id);
     }
+
+
 
     @PutMapping("/films/{id}/like/{userId}")
     public void addLike(@PathVariable int id, @PathVariable int userId){

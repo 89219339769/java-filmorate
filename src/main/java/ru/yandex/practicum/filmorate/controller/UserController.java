@@ -26,6 +26,8 @@ public class UserController {
         return inMemoryUserStorage.findUserById(id);
     }
 
+
+
     @GetMapping("/users")
     public List<User> allUsers(){
         return inMemoryUserStorage.getAllUsers();

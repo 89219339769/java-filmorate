@@ -17,15 +17,14 @@ import java.util.stream.Collectors;
 @Slf4j
 public class InMemoryUserStorage implements UserStorage {
     private final Map<Integer, User> users = new HashMap<>();
-    private  Integer globalIdUser = 1;
+    private Integer globalIdUser = 1;
 
-
-    private Integer createNextId(){
-        return globalIdUser++;
+    private Integer createNextId() {return globalIdUser++;
     }
-@Override
-public boolean checkValidationUser(User user){
-        if (user.getBirthday().isAfter(LocalDate.now())){
+
+    @Override
+    public boolean checkValidationUser(User user) {
+        if (user.getBirthday().isAfter(LocalDate.now())) {
             log.warn("дата рождения не может быть в будущем");
             throw new ValidationException("дата рождения не может быть в будущем");
         }
@@ -40,7 +39,7 @@ public boolean checkValidationUser(User user){
 
     @Override
     public User addUser(User user) {
-        if (checkValidationUser(user)){
+        if (checkValidationUser(user)) {
             user.setId(createNextId());
             users.put(user.getId(), user);
             log.info("Успешное добавление пользователя");
@@ -56,25 +55,25 @@ public boolean checkValidationUser(User user){
 
     @Override
     public User changeUser(User user) {
-        if (user.getId() == null){
+        if (user.getId() == null) {
             throw new ValidationException("Отсутствует id пользователя");
         }
-        if (!users.containsKey(user.getId())){
+        if (!users.containsKey(user.getId())) {
             throw new FilmUserNotFoundException(String.format("Пользователя с id %s нет", user.getId()));
         }
-        if (checkValidationUser(user)){
+        if (checkValidationUser(user)) {
             users.put(user.getId(), user);
             log.info("Успешное изменение пользователя");
         }
         return user;
     }
 
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         return users.values().stream().collect(Collectors.toList());
     }
 
-    public User findUserById(Integer id){
-        if (users.get(id) == null){
+    public User findUserById(Integer id) {
+        if (users.get(id) == null) {
             throw new FilmUserNotFoundException("Нет такого пользователя");
         }
         return users.get(id);

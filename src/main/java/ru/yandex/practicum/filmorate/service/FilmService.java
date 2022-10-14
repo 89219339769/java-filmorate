@@ -21,6 +21,17 @@ public class FilmService {
         this.inMemoryUserStorage = inMemoryUserStorage;
     }
 
+
+
+
+    public Film addFilm(Film film) {
+
+       return inMemoryFilmStorage.addFilm(film) ;
+
+    }
+
+
+
     public void addLike(int idUser, int idFilm){
         Film film = inMemoryFilmStorage.findFilmById(idFilm);
         User user = inMemoryUserStorage.findUserById(idUser);
@@ -42,15 +53,4 @@ public class FilmService {
                 .collect(Collectors.toList());
     }
 
-    public Film findFilmById(int id){
-        if (id <= 0){
-            throw new FilmUserNotFoundException(String.format("Фильм с id %s не найден", id));
-        }
-        Film film = inMemoryFilmStorage.getAllFilms().get(id);
-        if (!inMemoryFilmStorage.getAllFilms().contains(film)){
-            throw new FilmUserNotFoundException(String.format("Фильм с id %s не найден", id));
-        }
-
-        return film;
-    }
 }

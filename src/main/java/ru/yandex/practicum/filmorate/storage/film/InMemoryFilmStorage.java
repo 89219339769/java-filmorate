@@ -13,39 +13,43 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Slf4j
+
 @Component
-public class InMemoryFilmStorage implements FilmStorage{
-    private final Map<Integer, Film> films;
+@Slf4j
+public class InMemoryFilmStorage implements FilmStorage {
+    private final Map<Integer, Film> films = new HashMap<>();
     private final static LocalDate MIN_DATE_START_RELEASE = LocalDate.parse("1895-12-28");
-    private  Integer globalIdFilm = 1;
+    private Integer globalIdFilm = 1;
 
-    public InMemoryFilmStorage() {
-        films = new HashMap<>();
-    }
-    @Override
-    public boolean checkValidationFilm(Film film) throws ValidationException {
-        if (film.getReleaseDate().isBefore(MIN_DATE_START_RELEASE)){
-            log.info("Ошибка валидации: дата релиза — раньше 28 декабря 1895 года");
-            throw new ValidationException("дата релиза раньше 28 декабря 1895 года");
-        } else if (film.getDuration() < 0){
-            log.info("Ошибка валидации: продолжительность фильма отрицательная");
-            throw new ValidationException("продолжительность фильма должна быть положительной");
-       }
-        return true;
-    }
-
-    private Integer createNextId(){
+    private Integer createNextId() {
         return globalIdFilm++;
     }
 
+   // public InMemoryFilmStorage() {
+     //   films = new HashMap<>();
+ //   }
+
+    @Override
+    public boolean checkValidationFilm(Film film) throws ValidationException {
+        if (film.getReleaseDate().isBefore(MIN_DATE_START_RELEASE)) {
+            log.info("Ошибка валидации: дата релиза — раньше 28 декабря 1895 года");
+            throw new ValidationException("дата релиза раньше 28 декабря 1895 года");
+        } else if (film.getDuration() < 0) {
+            log.info("Ошибка валидации: продолжительность фильма отрицательная");
+            throw new ValidationException("продолжительность фильма должна быть положительной");
+        }
+        return true;
+    }
+
+
+
     @Override
     public Film addFilm(Film film) {
-        if (checkValidationFilm(film)){
+        if (checkValidationFilm(film)) {
             film.setId(createNextId());
             films.put(film.getId(), film);
             log.info("Успешное добавление фильма: наименование - {}, символов в описании - {}, дата - {}, " +
-                            "продолжительность - {}",film.getName(), film.getDescription().length()
+                            "продолжительность - {}", film.getName(), film.getDescription().length()
                     , film.getReleaseDate(), film.getDuration());
         }
         return film;
@@ -58,19 +62,20 @@ public class InMemoryFilmStorage implements FilmStorage{
 
     @Override
     public Film changeFilm(Film film) {
-        if (film.getId() == null){
+        if (film.getId() == null) {
             throw new ValidationException("Отсутствует id параметр фильм");
         }
 
 
-        if(!films.containsKey(film.getId()))
-        { throw new FilmUserNotFoundException("фильма с этим номером нет, перезаписать невозможно");}
+        if (!films.containsKey(film.getId())) {
+            throw new FilmUserNotFoundException("фильма с этим номером нет, перезаписать невозможно");
+        }
 
 
-        if (checkValidationFilm(film)){
+        if (checkValidationFilm(film)) {
             films.put(film.getId(), film);
             log.info("Успешное изменение фильма: наименование - {}, символов в описании - {}, дата - {}, " +
-                            "продолжительность - {}",film.getName(), film.getDescription().length()
+                            "продолжительность - {}", film.getName(), film.getDescription().length()
                     , film.getReleaseDate(), film.getDuration());
         }
         return film;
@@ -82,9 +87,10 @@ public class InMemoryFilmStorage implements FilmStorage{
     }
 
     @Override
-    public Film findFilmById(int idFilm){
-        if (idFilm <= 0){
-            throw new FilmUserNotFoundException(String.format("Нет фильма с id %s", idFilm));
+    public Film findFilmById(int idFilm) {
+
+        if (films.get(idFilm) == null) {
+            throw new FilmUserNotFoundException("Нет такого фильма");
         }
         return films.get(idFilm);
     }
