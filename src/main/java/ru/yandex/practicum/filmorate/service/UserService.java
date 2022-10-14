@@ -17,6 +17,32 @@ public class UserService {
         this.inMemoryUserStorage = inMemoryUserStorage;
     }
 
+    public User findUserById(Integer id) {
+        return inMemoryUserStorage.findUserById(id);
+
+    }
+
+    public List<User> getAllUsers(){
+        return inMemoryUserStorage.getAllUsers();
+    }
+
+    public User addUser(User user) {
+        return inMemoryUserStorage.addUser(user);
+    }
+
+    public User changeUser(User user) {
+        return inMemoryUserStorage.changeUser(user);
+    }
+
+    public void deleteUser(Integer idUser){
+         inMemoryUserStorage.deleteUser(idUser);
+    }
+
+    public boolean checkValidationUser(User user) {
+      return   inMemoryUserStorage.checkValidationUser(user);
+
+    }
+
     //Добавляет друзей в список
     public void addFriends(int idUser, int idFriends){
         User user = inMemoryUserStorage.findUserById(idUser);

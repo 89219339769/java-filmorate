@@ -21,16 +21,13 @@ public class FilmService {
         this.inMemoryUserStorage = inMemoryUserStorage;
     }
 
-
     public Film addFilm(Film film) {
        return inMemoryFilmStorage.addFilm(film) ;
     }
 
-
     public Film changeFilm(Film film){
         return inMemoryFilmStorage.changeFilm(film) ;
     }
-
 
     public List<Film> getAllFilms(){
         return inMemoryFilmStorage.getAllFilms();
@@ -47,8 +44,6 @@ public class FilmService {
 
        return inMemoryFilmStorage.checkValidationFilm(film);
     }
-
-
 
         public void addLike(int idUser, int idFilm){
         Film film = inMemoryFilmStorage.findFilmById(idFilm);
@@ -70,5 +65,4 @@ public class FilmService {
                 }).limit(count)
                 .collect(Collectors.toList());
     }
-
 }

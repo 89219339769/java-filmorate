@@ -6,9 +6,7 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
-import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
@@ -33,11 +31,10 @@ public class UserControllerTest {
 
     @BeforeEach
     public void beforeEach() {
-        FilmStorage inMemoryFilmStorage = new InMemoryFilmStorage();
         UserStorage inMemoryUserStorage = new InMemoryUserStorage();
         UserService userService = new UserService(inMemoryUserStorage);
 
-        uc = new UserController(inMemoryUserStorage,userService);
+        uc = new UserController(userService);
         User user = getUser();
         uc.addUser(user);
     }
@@ -46,20 +43,20 @@ public class UserControllerTest {
     public void postUserWithInvalidBirsdayDate() {
         User updatedUser = getUser();
         updatedUser.setBirthday(LocalDate.of(2026, 1, 1));
-        assertThrows(ValidationException.class, () -> uc.inMemoryUserStorage.checkValidationUser(updatedUser), "дата рождения не может быть в будущем.");
+        assertThrows(ValidationException.class, () -> uc.userService.checkValidationUser(updatedUser), "дата рождения не может быть в будущем.");
     }
 
     @Test
     public void postUserWithInvalideLogin() {
         User updatedUser = getUser();
         updatedUser.setLogin("log in ");
-        assertThrows(ValidationException.class, () ->uc.inMemoryUserStorage.checkValidationUser(updatedUser));
+        assertThrows(ValidationException.class, () ->uc.userService.checkValidationUser(updatedUser));
     }
 
     @Test
     public void postUserWithInvalideDateOfBirth() {
         User updatedUser = getUser();
         updatedUser.setBirthday((LocalDate.of(3022, 1, 1)));
-        assertThrows(ValidationException.class, () -> uc.inMemoryUserStorage.checkValidationUser(updatedUser));
+        assertThrows(ValidationException.class, () -> uc.userService.checkValidationUser(updatedUser));
     }
 }

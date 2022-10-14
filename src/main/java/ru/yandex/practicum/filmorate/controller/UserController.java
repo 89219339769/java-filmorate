@@ -12,25 +12,21 @@ import java.util.List;
 @RestController
 @Slf4j
 public class UserController {
-    public final UserStorage inMemoryUserStorage;
-    private final UserService userService;
+    public final UserService userService;
 
     @Autowired
-    public UserController(UserStorage inMemoryUserStorage, UserService userService) {
-        this.inMemoryUserStorage = inMemoryUserStorage;
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping("/users/{id}")
     public User findUserById(@PathVariable Integer id){
-        return inMemoryUserStorage.findUserById(id);
+        return userService.findUserById(id);
     }
-
-
 
     @GetMapping("/users")
     public List<User> allUsers(){
-        return inMemoryUserStorage.getAllUsers();
+        return userService.getAllUsers();
     }
 
     @GetMapping("/users/{id}/friends/common/{otherId}")
@@ -45,14 +41,14 @@ public class UserController {
 
     @PostMapping("/users")
     public @Valid User addUser(@Valid @RequestBody User user){
-        inMemoryUserStorage.addUser(user);
+        userService.addUser(user);
         return user;
     }
 
     @ResponseBody
     @PutMapping("/users")
     public User changeUser(@Valid @RequestBody User user){
-        return inMemoryUserStorage.changeUser(user);
+        return  userService.changeUser(user);
     }
 
     @PutMapping("/users/{id}/friends/{friendId}")
@@ -62,7 +58,7 @@ public class UserController {
 
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable Integer id){
-        inMemoryUserStorage.deleteUser(id);
+        userService.deleteUser(id);
     }
 
     @DeleteMapping("/users/{id}/friends/{friendId}")

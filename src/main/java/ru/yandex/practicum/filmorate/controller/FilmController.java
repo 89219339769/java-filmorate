@@ -13,9 +13,7 @@ import java.util.List;
 @RestController
 @Slf4j
 public class FilmController {
-
     public final FilmService filmService;
-
     @Autowired
     public FilmController(FilmService filmService) {
         this.filmService = filmService;
@@ -40,7 +38,6 @@ public class FilmController {
     public Film findFilmById(@PathVariable int id){
         return filmService.findFilmById(id);
     }
-
 
     @PutMapping("/films/{id}/like/{userId}")
     public void addLike(@PathVariable int id, @PathVariable int userId){
