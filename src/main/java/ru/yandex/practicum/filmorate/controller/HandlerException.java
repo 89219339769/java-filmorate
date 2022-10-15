@@ -22,7 +22,7 @@ public class HandlerException {
 
    @ExceptionHandler(Throwable.class)
    @ResponseStatus(HttpStatus. INTERNAL_SERVER_ERROR)
-  public ErrorResponse handleThrowable(final IndexOutOfBoundsException e){
+  public ErrorResponse handleThrowable(final RuntimeException e){
        return new ErrorResponse("Непредвиденное исключение " + e.getStackTrace());
   }
 }

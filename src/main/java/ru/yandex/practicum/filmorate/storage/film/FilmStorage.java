@@ -9,5 +9,5 @@ public interface FilmStorage {
     Film changeFilm(Film film);
     List<Film> getAllFilms();
     Film findFilmById(int idFilm);
-    public boolean checkValidationFilm(Film film);
+    boolean checkValidationFilm(Film film);
 }
