@@ -9,7 +9,6 @@ public interface UserStorage {
         void deleteUser(Integer idUser);
         User changeUser(User user);
         User findUserById(Integer id);
-        boolean checkValidationUser(User user);
 }
 
 

@@ -1,12 +1,16 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
+@Slf4j
 @Service
 public class UserService {
     private final UserStorage inMemoryUserStorage;
@@ -26,10 +30,12 @@ public class UserService {
     }
 
     public User addUser(User user) {
+        checkValidationUser(user);
         return inMemoryUserStorage.addUser(user);
     }
 
     public User changeUser(User user) {
+        checkValidationUser(user);
         return inMemoryUserStorage.changeUser(user);
     }
 
@@ -37,10 +43,6 @@ public class UserService {
          inMemoryUserStorage.deleteUser(idUser);
     }
 
-    public boolean checkValidationUser(User user) {
-      return   inMemoryUserStorage.checkValidationUser(user);
-
-    }
 
     //Добавляет друзей в список
     public void addFriends(int idUser, int idFriends){
@@ -77,5 +79,17 @@ public class UserService {
             }
         }
         return commonFriends;
+    }
+    public boolean checkValidationUser(User user) {
+        if (user.getBirthday().isAfter(LocalDate.now())) {
+            log.warn("дата рождения не может быть в будущем");
+            throw new ValidationException("дата рождения не может быть в будущем");
+        }
+        String temp = user.getLogin();
+        if (temp.contains(" ")) {
+            log.info("логин не млжет быть пустым или с пробелами.");
+            throw new ValidationException("Некоректные данные ");
+        }
+        return true;
     }
 }

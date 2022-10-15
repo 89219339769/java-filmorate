@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.FilmUserNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,29 +20,11 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public boolean checkValidationUser(User user) {
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            log.warn("дата рождения не может быть в будущем");
-            throw new ValidationException("дата рождения не может быть в будущем");
-        }
-        String temp = user.getLogin();
-        if (temp.contains(" ")) {
-            log.info("логин не млжет быть пустым или с пробелами.");
-            throw new ValidationException("Некоректные данные ");
-        }
-
-        return true;
-    }
-
-    @Override
     public User addUser(User user) {
-        if (checkValidationUser(user)) {
             user.setId(createNextId());
             users.put(user.getId(), user);
             log.info("Успешное добавление пользователя");
             return user;
-        }
-        return user;
     }
 
     @Override
@@ -59,10 +40,8 @@ public class InMemoryUserStorage implements UserStorage {
         if (!users.containsKey(user.getId())) {
             throw new FilmUserNotFoundException(String.format("Пользователя с id %s нет", user.getId()));
         }
-        if (checkValidationUser(user)) {
             users.put(user.getId(), user);
             log.info("Успешное изменение пользователя");
-        }
         return user;
     }
 
