@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Builder;
 import lombok.Data;
+
 import javax.validation.constraints.*;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -55,8 +56,9 @@ public class Film {
     public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
     }
+
     public void setDuration(Integer duration) {
-        this.duration= duration;
+        this.duration = duration;
     }
 
 }

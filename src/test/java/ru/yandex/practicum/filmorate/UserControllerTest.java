@@ -18,7 +18,7 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class UserControllerTest {
-    private UserController uc;
+    private UserController userController;
 
     private User getUser() {
         return User.builder()
@@ -34,29 +34,29 @@ public class UserControllerTest {
         UserStorage inMemoryUserStorage = new InMemoryUserStorage();
         UserService userService = new UserService(inMemoryUserStorage);
 
-        uc = new UserController(userService);
+        userController = new UserController(userService);
         User user = getUser();
-        uc.addUser(user);
+        userController.addUser(user);
     }
 
     @Test
     public void postUserWithInvalidBirsdayDate() {
         User updatedUser = getUser();
         updatedUser.setBirthday(LocalDate.of(2026, 1, 1));
-        assertThrows(ValidationException.class, () -> uc.userService.checkValidationUser(updatedUser), "дата рождения не может быть в будущем.");
+        assertThrows(ValidationException.class, () ->userController.userService.checkValidationUser(updatedUser), "дата рождения не может быть в будущем.");
     }
 
     @Test
     public void postUserWithInvalideLogin() {
         User updatedUser = getUser();
         updatedUser.setLogin("log in ");
-        assertThrows(ValidationException.class, () ->uc.userService.checkValidationUser(updatedUser));
+        assertThrows(ValidationException.class, () ->userController.userService.checkValidationUser(updatedUser));
     }
 
     @Test
     public void postUserWithInvalideDateOfBirth() {
         User updatedUser = getUser();
         updatedUser.setBirthday((LocalDate.of(3022, 1, 1)));
-        assertThrows(ValidationException.class, () -> uc.userService.checkValidationUser(updatedUser));
+        assertThrows(ValidationException.class, () -> userController.userService.checkValidationUser(updatedUser));
     }
 }
