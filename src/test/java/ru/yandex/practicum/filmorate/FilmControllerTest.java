@@ -1,23 +1,21 @@
 package ru.yandex.practicum.filmorate;
 
-
 import org.junit.jupiter.api.BeforeEach;
-
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.PropertyBatchUpdateException;
-import org.springframework.beans.factory.parsing.Problem;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
-
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import java.time.LocalDate;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.util.AssertionErrors.assertEquals;
 
 public class FilmControllerTest {
-    private FilmController uc;
+    private  FilmController filmController;;
 
     private Film getFilm() {
         return Film.builder()
@@ -27,60 +25,39 @@ public class FilmControllerTest {
                 .releaseDate(LocalDate.of(1921, 1, 1))
                 .duration(90)
                 .build();
+
     }
 
     @BeforeEach
     public void beforeEach() {
-        uc = new FilmController();
+        FilmStorage inMemoryFilmStorage = new InMemoryFilmStorage();
+        UserStorage inMemoryUserStorage = new InMemoryUserStorage();
+        FilmService filmService = new FilmService(inMemoryFilmStorage,inMemoryUserStorage);
+
+        filmController = new FilmController(filmService);
         Film film = getFilm();
-        uc.createFilm(film);
+        filmController.addFilm(film);
     }
-
-
-
-
 
     @Test
     public void createFilmWithInvalidRelisDate() {
-        uc = new FilmController();
-        Film film = getFilm();
-        uc.createFilm(film);
 
         Film updateFilm = getFilm();
         updateFilm.setReleaseDate(LocalDate.of(1721, 1, 1));
         RuntimeException exception;
 
-        exception = assertThrows(ValidationException.class, () -> uc.validateDateOfReliseFilm(updateFilm));
-        assertEquals(exception.getMessage(), exception.getMessage(), "Дата релиза фильм не должна быть ранее 28 декабря 1895 года .");
+        exception = assertThrows(ValidationException.class, () ->filmController.filmService.checkValidationFilm(updateFilm));
+        assertEquals(exception.getMessage(), exception.getMessage(), "дата релиза раньше 28 декабря 1895 года");
     }
-
 
     @Test
-    public void createFilmWithWrongId() {
+    public void createFilmWithInvalidDuration() {
 
         Film updateFilm = getFilm();
-        updateFilm.setId(1);
-        RuntimeException exception;
-        Film film = getFilm();
-
-        exception = assertThrows(ValidationException.class, () -> uc.validateFilmCreate(updateFilm));
-        assertEquals(exception.getMessage(), exception.getMessage(), "Фильм - " + film.getName() + " c id - " + film.getId() + " уже существует");
-    }
-
-
-    @Test
-    public void createFilmWithNegativeId() {
-
-        uc = new FilmController();
-        Film film = getFilm();
-        uc.createFilm(film);
-
-        Film updateFilm = getFilm();
-        updateFilm.setId(-1);
+        updateFilm.setDuration(-90);
         RuntimeException exception;
 
-        exception = assertThrows(ValidationException.class, () -> uc.validateFilmId(updateFilm));
-        assertEquals(exception.getMessage(), exception.getMessage(), "Id Фильма не может быть отрицательным ");
+        exception = assertThrows(ValidationException.class, () -> filmController.filmService.checkValidationFilm(updateFilm));
+        assertEquals(exception.getMessage(), exception.getMessage(), "продолжительность фильма должна быть положительной");
     }
-
 }

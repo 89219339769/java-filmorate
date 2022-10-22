@@ -1,77 +1,61 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exceptions.*;
+import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-
+import ru.yandex.practicum.filmorate.service.FilmService;
 import javax.validation.Valid;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
-@RequestMapping("/films")
+@Slf4j
 public class FilmController {
-
-
-    private final Map<Integer, Film> films = new HashMap<>();
-    private int id = 1;
-    private static final Logger log = LoggerFactory.getLogger(FilmController.class);
-
-    @PostMapping()
-    public Film createFilm(@Valid @RequestBody Film film) {
-        validateFilmCreate(film);
-        validateDateOfReliseFilm(film);
-        validateFilmId(film);
-        film.setId(id++);
-        films.put(film.getId(), film);
-        log.info("Фильм с id {} добавлен ", film.getId());
-        return film;
+    public final FilmService filmService;
+    @Autowired
+    public FilmController(FilmService filmService) {
+        this.filmService = filmService;
     }
 
-    @PutMapping()
-    public Film updateFilm(@Valid @RequestBody Film film) {
-        validateFilmPut(film);
-        validateDateOfReliseFilm(film);
-        validateFilmId(film);
-        films.put(film.getId(), film);
-        log.info("Фильм с id {} обновлён", film.getId());
-        return film;
+    @PostMapping("/films")
+    public Film addFilm(@Valid @RequestBody Film film) throws ValidationException {
+        return filmService.addFilm(film);
     }
 
-    @GetMapping()
-    public List<Film> getAllFilms() {
-        return new ArrayList<>(films.values());
+    @PutMapping("/films")
+    public Film changeFilm(@Valid @RequestBody Film film) throws ValidationException{
+        return filmService.changeFilm(film);
     }
 
-    public void validateFilmCreate(Film film) {
-        if (films.containsKey(film.getId())) {
-            throw new ValidationException("Фильм - " + film.getName() + " c id - " + film.getId() + " уже существует");
-        }
+    @GetMapping("/films")
+    public List<Film> allFilms(){
+        return filmService.getAllFilms();
     }
 
-    public void validateFilmPut(Film film) {
-        if (!films.containsKey(film.getId())) {
-            throw new ValidationException("Фильм - " + film.getName() + " c id - " + film.getId() + " не существует");
-        }
+    @GetMapping("/films/{id}")
+    public Film findFilmById(@PathVariable int id){
+        return filmService.findFilmById(id);
     }
 
-    public void validateDateOfReliseFilm(Film film) {
-        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
-            log.info("Дата релиза фильм не должна быть ранее 28 декабря 1895 года .");
-            throw new ValidationException("Дата релиза фильм не должна быть ранее 28 декабря 1895 года .");
-        }
+    @PutMapping("/films/{id}/like/{userId}")
+    public void addLike(@PathVariable int id, @PathVariable int userId){
+        filmService.addLike(userId, id);
     }
 
-    public void validateFilmId(Film film) {
-        if (film.getId() < 0) {
-            throw new ValidationException("Id Фильма не может быть отрицательным ");
-        }
+    @DeleteMapping("/films/{id}/like/{userId}")
+    public void deleteLike(@PathVariable int id, @PathVariable int userId){
+        filmService.deleteLike(id, userId);
+    }
+
+    @GetMapping("/films/popular")
+    public List<Film> bestFilmByLike(
+            @RequestParam(value = "count", defaultValue = "10", required = false) Integer count){
+        return filmService.bestFilmByLike(count);
+    }
+
+    @DeleteMapping("/films/{id}")
+    public void deleteFilm(@PathVariable Integer id){
+        filmService.deleteFilm(id);
     }
 }

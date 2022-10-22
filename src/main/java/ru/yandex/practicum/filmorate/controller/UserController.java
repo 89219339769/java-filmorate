@@ -1,100 +1,67 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exceptions.*;
-import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
-
-
+import ru.yandex.practicum.filmorate.service.UserService;
 import javax.validation.Valid;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDate;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@Slf4j
 public class UserController {
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
-    private final Map<Integer, User> users = new HashMap<>();
+    public final UserService userService;
 
-    @GetMapping
-    public Collection<User> findAll() {
-        return users.values();
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @PostMapping
-    public User create(@Valid @RequestBody User user) {
-        validateUserPost(user);
-        String string = user.getEmail();
-        char[] chArray = string.toCharArray();
-        Character ch2 = '@';
-        for (int i = 0; i < chArray.length; i++) {
-            if (chArray[i] == ch2) {
-                log.info("добавлен пользователь " + user);
-                users.put(user.getId(), user);
-                return user;
-            }
-        }
-        log.info("Почта пользователя должна содержать символ @.");
-        throw new ValidationException("Почта пользователя  должна содержать символ @.");
+    @GetMapping("/users/{id}")
+    public User findUserById(@PathVariable Integer id){
+        return userService.findUserById(id);
     }
 
-    @PutMapping
-    public User put(@Valid @RequestBody User user) {
+    @GetMapping("/users")
+    public List<User> allUsers(){
+        return userService.getAllUsers();
+    }
 
-        validateUserPut(user);
-        users.put(user.getId(), user);
-        log.info("Список пользоваттелей обновлен.");
+    @GetMapping("/users/{id}/friends/common/{otherId}")
+    public List<User> findCommonFriends(@PathVariable("id") int idUser, @PathVariable("otherId") int idOther){
+        return userService.findCommonFriends(idUser, idOther);
+    }
+
+    @GetMapping("/users/{id}/friends")
+    public List<User> findAllFriends(@PathVariable("id") Integer idUser){
+        return userService.findAllFriends(idUser);
+    }
+
+    @PostMapping("/users")
+    public @Valid User addUser(@Valid @RequestBody User user){
+        userService.addUser(user);
         return user;
     }
 
-    public void validateUserPost(User user) {
-        if (users.containsKey(user.getId())) {
-            throw new ValidationException("Пользователь - " + user.getName() + " c id - " + user.getId() + " уже существует");
-        }
-
-        if (user.getId() == 0) {
-            int temp = 1;
-            user.setId(temp);
-        }
-        if (user.getBirthday().isAfter(ChronoLocalDate.from(LocalDateTime.now()))) {
-            log.info("дата  рождения не может быть в будущем.");
-            throw new ValidationException("дата рождения не может быть в будущем.");
-        }
-        String temp = user.getLogin();
-        boolean temp1 = temp.contains(" ");
-        if (user.getLogin().isBlank() || temp1) {
-            log.info("почтовый адрес не может быть пустым или с пробелами.");
-            throw new ValidationException("почтовый адрес не может быть пустым или с пробелами.");
-        }
-        String temp2 = user.getLogin();
-        if (user.getName() == null || user.getId() == 0) {
-            user.setName(temp2);
-            log.info("логин будет использоваться как имя.");
-        }
-        if (user.getEmail().isBlank()) {
-            log.info("почтовый адрес не может быть пустым.");
-            throw new ValidationException("почтовый адрес не может быть пустым.");
-        }
+    @ResponseBody
+    @PutMapping("/users")
+    public User changeUser(@Valid @RequestBody User user){
+        return  userService.changeUser(user);
     }
 
-    public void validateUserPut(User user) {
-        if (!users.containsKey(user.getId())) {
-            throw new ValidationException("Пользователь - " + user.getName() + " c id - " + user.getId() + " не существует");
-        }
-
-        if (user.getId() < 0) {
-            throw new ValidationException("Id не может быть отрицательным.");
-        }
-
-        if (user.getEmail() == null || user.getEmail().isBlank()) {
-            throw new ValidationException("почтовый адрес не может быть пустым.");
-        }
+    @PutMapping("/users/{id}/friends/{friendId}")
+    public void addFriends(@PathVariable("id") int idUser, @PathVariable("friendId") int idFriends){
+        userService.addFriends(idUser, idFriends);
     }
 
+    @DeleteMapping("/users/{id}")
+    public void deleteUser(@PathVariable Integer id){
+        userService.deleteUser(id);
+    }
+
+    @DeleteMapping("/users/{id}/friends/{friendId}")
+    public void deleteFriends(@PathVariable("id") int idUser, @PathVariable("friendId") int idFriends){
+        userService.deleteFriends(idUser, idFriends);
+    }
 }
