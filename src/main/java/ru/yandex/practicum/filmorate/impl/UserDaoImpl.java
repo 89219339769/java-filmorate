@@ -45,7 +45,7 @@ public class UserDaoImpl  {
 
     public Optional<User> findUserById(Integer id) {
         // выполняем запрос к базе данных.
-        SqlRowSet userRows = jdbcTemplate.queryForRowSet("select * from cat_user where Id = ?", id);
+        SqlRowSet userRows = jdbcTemplate.queryForRowSet("select * from USERS_TABLE where Id = ?", id);
 
         // обрабатываем результат выполнения запроса
         if (userRows.next()) {
