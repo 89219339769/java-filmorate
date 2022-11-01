@@ -12,7 +12,7 @@ import ru.yandex.practicum.filmorate.service.UserService;
 import java.util.Collection;
 import java.util.Optional;
 
-@RestController("")
+@RestController()
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
