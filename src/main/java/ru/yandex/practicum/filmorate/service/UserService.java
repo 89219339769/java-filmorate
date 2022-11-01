@@ -1,18 +1,35 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
+import ru.yandex.practicum.filmorate.impl.UserDaoImpl;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
+
 import java.util.List;
-@Slf4j
+import java.util.Optional;
+
 @Service
 public class UserService {
+    private final UserDaoImpl userDao;
+    @Autowired
+    public UserService(UserDaoImpl userDao) {
+        this.userDao = userDao;
+    }
+
+    public Optional<User> findUserById(Integer id) {
+        return userDao.findUserById(id);
+    }
+
+    public List<User> getAllUsers(){
+        return userDao.getAllUsers();
+    }
+
+
+}
+
+
+    /*
     private final UserStorage inMemoryUserStorage;
 
     @Autowired
@@ -92,4 +109,4 @@ public class UserService {
         }
         return true;
     }
-}
+}*/

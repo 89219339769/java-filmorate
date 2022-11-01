@@ -15,11 +15,11 @@ public class User {
     private  String email;
     private  String login;
     private String name;
-    @NotNull
-    private  LocalDate birthday;
-    private Set<Integer> friends = new HashSet<>();
+ //   @NotNull
+  //  private  LocalDate birthday;
+ //   private Set<Integer> friends = new HashSet<>();
 
-    public User(Integer id,String email, String name, String login, LocalDate birthday,Set<Integer> friends) {
+    public User(Integer id,String email, String name, String login ) {
         this.id = id;
         this.email = email;
         this.login = login;
@@ -28,6 +28,6 @@ public class User {
         } else {
             this.name = name;
         }
-        this.birthday = birthday;
+      //  this.birthday = birthday;
     }
 }

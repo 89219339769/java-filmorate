@@ -20,9 +20,5 @@ public class HandlerException {
         return new ErrorResponse(e.getMessage());
     }
 
-   @ExceptionHandler(Throwable.class)
-   @ResponseStatus(HttpStatus. INTERNAL_SERVER_ERROR)
-  public ErrorResponse handleThrowable(final RuntimeException e){
-       return new ErrorResponse("Непредвиденное исключение " + e.getStackTrace());
-  }
+
 }
