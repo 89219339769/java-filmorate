@@ -27,7 +27,7 @@ public class UserDaoImpl  {
 
 
     public List<User> getAllUsers() {
-        final String sql = "Select * from USERS_TEMP";
+        final String sql = "Select * from USERS_TABLE";
 
         Collection<User> users = new ArrayList<>();
 
