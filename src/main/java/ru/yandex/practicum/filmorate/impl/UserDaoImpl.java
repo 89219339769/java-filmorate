@@ -26,26 +26,26 @@ public class UserDaoImpl  {
 
 
 
-    public List<User> getAllUsers() {
+    public Collection<User> findAll() {
         final String sql = "Select * from users";
 
         Collection<User> users = new ArrayList<>();
 
         SqlRowSet rs = jdbcTemplate.queryForRowSet(sql);
         while (rs.next()) {
-            users.add(new User(rs.getInt("ID"),
+            users.add(new User(rs.getInt("USER_ID"),
                     rs.getString("EMAIL"),
                     rs.getString("LOGIN"),
                     rs.getString("NAME")
+
             ));
         }
-        return (List<User>) users;
+        return users;
     }
-
 
     public Optional<User> findUserById(Integer id) {
         // выполняем запрос к базе данных.
-        SqlRowSet userRows = jdbcTemplate.queryForRowSet("select * from cat_user where Id = ?", id);
+        SqlRowSet userRows = jdbcTemplate.queryForRowSet("select * from users where Id = ?", id);
 
         // обрабатываем результат выполнения запроса
         if (userRows.next()) {
