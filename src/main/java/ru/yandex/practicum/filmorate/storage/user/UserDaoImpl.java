@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exceptions.FilmUserNotFoundException;
+import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 
@@ -22,8 +24,7 @@ public class UserDaoImpl implements UserStorage {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
-    public List<User> getAllUsers() {
+    public Collection<User> getAllUsers() {
         final String sql = "Select * from USERS_TABLE";
 
         Collection<User> users = new ArrayList<>();
@@ -37,7 +38,7 @@ public class UserDaoImpl implements UserStorage {
                     rs.getDate("Birthday").toLocalDate()
             ));
         }
-        return (List<User>) users;
+        return  users;
     }
 
     @Override
@@ -52,21 +53,35 @@ public class UserDaoImpl implements UserStorage {
         return user;
         }
 
-
-
     @Override
     public void deleteUser(Integer idUser) {
             String sqlQuery = "delete from USERS_TABLE where USER_ID = ?";
              jdbcTemplate.update(sqlQuery, idUser);
         }
 
-
-
     @Override
     public User changeUser(User user) {
-        return null;
-    }
+        if (user.getId() == null) {
+            throw new ValidationException("Отсутствует id пользователя");
+        }
+         List<User>users;
+     users= (List<User>) getAllUsers();
+User userTemp = users.get(user.getId());
 
+            if (!users.contains( userTemp)) {
+                throw new FilmUserNotFoundException(String.format("Пользователя с id %s нет", user.getId()));
+            }
+            String sqlQuery = "update USERS_TABLE set " +
+                    "EMAIL = ?, LOGIN = ?, NAME = ?,Birthday = ?" +
+                    "where USER_ID = ?";
+            jdbcTemplate.update(sqlQuery,
+                    user.getEmail(),
+                    user.getLogin(),
+                    user.getName(),
+                    user.getBirthday(),
+                    user.getId());
+            return user;
+        }
 
     public Optional<User> findUserById(Integer id) {
         // выполняем запрос к базе данных.

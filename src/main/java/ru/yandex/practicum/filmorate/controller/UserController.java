@@ -42,6 +42,13 @@ public class UserController {
     }
 
 
+    @ResponseBody
+    @PutMapping
+    public User changeUser(@Valid @RequestBody User user){
+        return  userService.changeUser(user);
+    }
+
+
 }
     /*
     public final UserService userService;

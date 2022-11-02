@@ -11,12 +11,14 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 @Slf4j
 @Service
 public class UserService {
     private UserStorage storage;
+
     @Autowired
     public UserService(@Qualifier("UserDaoImpl") UserStorage storage) {
 
@@ -28,16 +30,26 @@ public class UserService {
         return storage.findUserById(id);
     }
 
-    public List<User> getAllUsers(){
-        return (List<User>) storage.getAllUsers();
+    public Collection<User> getAllUsers() {
+        return storage.getAllUsers();
     }
-
 
 
     public User addUser(User user) {
         checkValidationUser(user);
-        return  storage.addUser(user);
+        return storage.addUser(user);
     }
+
+    public void deleteUser(Integer idUser) {
+        storage.deleteUser(idUser);
+    }
+
+
+    public User changeUser(User user) {
+        checkValidationUser(user);
+        return storage.changeUser(user);
+    }
+
 
     public boolean checkValidationUser(User user) {
         if (user.getBirthday().isAfter(LocalDate.now())) {
@@ -52,20 +64,9 @@ public class UserService {
         return true;
     }
 
-    public void deleteUser(Integer idUser){
-        storage.deleteUser(idUser);
-    }
-
 }
-   /*
-    public User changeUser(User user) {
-        checkValidationUser(user);
-        return inMemoryUserStorage.changeUser(user);
-    }
+ /*
 
-    public void deleteUser(Integer idUser){
-         inMemoryUserStorage.deleteUser(idUser);
-    }
 
 
     //Добавляет друзей в список
