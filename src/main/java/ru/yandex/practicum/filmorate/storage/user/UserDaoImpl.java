@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -13,16 +12,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
 @Slf4j
 @Component("UserDaoImpl")
-public class UserDaoImpl implements UserStorage  {
+public class UserDaoImpl implements UserStorage {
     private final JdbcTemplate jdbcTemplate;
 
     public UserDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
-
 
 
     public List<User> getAllUsers() {
@@ -44,8 +42,16 @@ public class UserDaoImpl implements UserStorage  {
 
     @Override
     public User addUser(User user) {
-        return null;
-    }
+            String sqlQuery = "insert into USERS_TABLE(EMAIL,LOGIN,NAME,Birthday) " +
+                    "values (?, ?, ?, ?)";
+            jdbcTemplate.update(sqlQuery,
+                    user.getEmail(),
+                    user.getLogin(),
+                    user.getName(),
+                    user.getBirthday());
+        return user;
+        }
+
 
     @Override
     public void deleteUser(Integer idUser) {

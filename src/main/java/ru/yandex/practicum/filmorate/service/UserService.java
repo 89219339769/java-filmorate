@@ -1,16 +1,19 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.storage.user.UserDaoImpl;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
+@Slf4j
 @Service
 public class UserService {
     private UserStorage storage;
@@ -30,19 +33,29 @@ public class UserService {
     }
 
 
-}
-
-
-    /*
-
-
-
 
     public User addUser(User user) {
         checkValidationUser(user);
-        return inMemoryUserStorage.addUser(user);
+        return  storage.addUser(user);
     }
 
+    public boolean checkValidationUser(User user) {
+        if (user.getBirthday().isAfter(LocalDate.now())) {
+            log.warn("дата рождения не может быть в будущем");
+            throw new ValidationException("дата рождения не может быть в будущем");
+        }
+        String temp = user.getLogin();
+        if (temp.contains(" ")) {
+            log.info("логин не млжет быть пустым или с пробелами.");
+            throw new ValidationException("Некоректные данные ");
+        }
+        return true;
+    }
+
+
+
+}
+   /*
     public User changeUser(User user) {
         checkValidationUser(user);
         return inMemoryUserStorage.changeUser(user);
