@@ -33,10 +33,11 @@ public class UserDaoImpl  {
 
         SqlRowSet rs = jdbcTemplate.queryForRowSet(sql);
         while (rs.next()) {
-            users.add(new User(rs.getInt("ID"),
+            users.add(new User(rs.getInt("USER_ID"),
                     rs.getString("EMAIL"),
                     rs.getString("LOGIN"),
-                    rs.getString("NAME")
+                    rs.getString("NAME"),
+                    rs.getDate("Birthday").toLocalDate()
             ));
         }
         return (List<User>) users;
@@ -45,15 +46,16 @@ public class UserDaoImpl  {
 
     public Optional<User> findUserById(Integer id) {
         // выполняем запрос к базе данных.
-        SqlRowSet userRows = jdbcTemplate.queryForRowSet("select * from USERS_TABLE where Id = ?", id);
+        SqlRowSet userRows = jdbcTemplate.queryForRowSet("select * from USERS_TABLE where USER_ID = ?", id);
 
         // обрабатываем результат выполнения запроса
         if (userRows.next()) {
             User user = new User(
-                    userRows.getInt(id),
+                    userRows.getInt("USER_ID"),
                     userRows.getString("email"),
                     userRows.getString("login"),
-                    userRows.getString("name"));
+                    userRows.getString("name"),
+                    userRows.getDate("Birthday").toLocalDate());
 
             log.info("Найден пользователь: {} {}");
 
