@@ -19,11 +19,14 @@ public class FilmService {
     private static final LocalDate MIN_DATE_START_RELEASE = LocalDate.parse("1895-12-28");
     private final FilmStorage inMemoryFilmStorage;
     private final UserStorage inMemoryUserStorage;
+    private final UserService userService;
+
 
     @Autowired
-    public FilmService(FilmStorage inMemoryFilmStorage, UserStorage inMemoryUserStorage) {
+    public FilmService(FilmStorage inMemoryFilmStorage, UserStorage inMemoryUserStorage, UserService userService) {
         this.inMemoryFilmStorage = inMemoryFilmStorage;
         this.inMemoryUserStorage = inMemoryUserStorage;
+        this.userService = userService;
     }
 
     public Film addFilm(Film film) {
@@ -51,13 +54,13 @@ public class FilmService {
 
     public void addLike(int idUser, int idFilm) {
         Film film = inMemoryFilmStorage.findFilmById(idFilm);
-        User user = inMemoryUserStorage.findUserById(idUser);
+        User user = userService.findUserById(idUser).get();
         film.setLike(user.getId());
     }
 
     public void deleteLike(int idFilm, int idUser) {
         Film film = inMemoryFilmStorage.findFilmById(idFilm);
-        User user = inMemoryUserStorage.findUserById(idUser);
+        User user = userService.findUserById(idUser).get();
         film.getLike().remove(user.getId());
     }
 

@@ -1,9 +1,11 @@
 package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.impl.UserDaoImpl;
+import ru.yandex.practicum.filmorate.storage.user.UserDaoImpl;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 
 import java.util.List;
@@ -11,18 +13,20 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-    private final UserDaoImpl userDao;
+    private UserStorage storage;
     @Autowired
-    public UserService(UserDaoImpl userDao) {
-        this.userDao = userDao;
+    public UserService(@Qualifier("UserDaoImpl") UserStorage storage) {
+
+
+        this.storage = storage;
     }
 
     public Optional<User> findUserById(Integer id) {
-        return userDao.findUserById(id);
+        return storage.findUserById(id);
     }
 
     public List<User> getAllUsers(){
-        return userDao.getAllUsers();
+        return (List<User>) storage.getAllUsers();
     }
 
 
@@ -30,21 +34,9 @@ public class UserService {
 
 
     /*
-    private final UserStorage inMemoryUserStorage;
 
-    @Autowired
-    public UserService(UserStorage inMemoryUserStorage) {
-        this.inMemoryUserStorage = inMemoryUserStorage;
-    }
 
-    public User findUserById(Integer id) {
-        return inMemoryUserStorage.findUserById(id);
 
-    }
-
-    public List<User> getAllUsers(){
-        return inMemoryUserStorage.getAllUsers();
-    }
 
     public User addUser(User user) {
         checkValidationUser(user);

@@ -32,7 +32,7 @@ public class FilmControllerTest {
     public void beforeEach() {
         FilmStorage inMemoryFilmStorage = new InMemoryFilmStorage();
         UserStorage inMemoryUserStorage = new InMemoryUserStorage();
-        FilmService filmService = new FilmService(inMemoryFilmStorage,inMemoryUserStorage);
+        FilmService filmService = new FilmService(inMemoryFilmStorage,inMemoryUserStorage, userService);
 
         filmController = new FilmController(filmService);
         Film film = getFilm();

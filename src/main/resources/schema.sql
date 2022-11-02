@@ -6,6 +6,3 @@ CREATE TABLE IF NOT EXISTS USERS_TABLE
     NAME     VARCHAR(40),
     BIRTHDAY DATE
     );
-INSERT INTO USERS_TABLE  (EMAIL, LOGIN, NAME, BIRTHDAY) values ('1bla@ya.ru', 'login1', 'Петя', '2011-10-20');
-INSERT INTO USERS_TABLE (EMAIL, LOGIN, NAME, BIRTHDAY) values ('2bla@ya.ru', 'login2', 'Вася', '2010-11-21');
-INSERT INTO USERS_TABLE (EMAIL, LOGIN, NAME, BIRTHDAY) values ('3bla@ya.ru', 'login3', 'Коля', '2001-12-22');

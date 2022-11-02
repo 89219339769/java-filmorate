@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.impl;
+package ru.yandex.practicum.filmorate.storage.user;
 
 
 
@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 @Slf4j
 @Component("UserDaoImpl")
-public class UserDaoImpl  {
+public class UserDaoImpl implements UserStorage  {
     private final JdbcTemplate jdbcTemplate;
 
     public UserDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -41,6 +40,21 @@ public class UserDaoImpl  {
             ));
         }
         return (List<User>) users;
+    }
+
+    @Override
+    public User addUser(User user) {
+        return null;
+    }
+
+    @Override
+    public void deleteUser(Integer idUser) {
+
+    }
+
+    @Override
+    public User changeUser(User user) {
+        return null;
     }
 
 
