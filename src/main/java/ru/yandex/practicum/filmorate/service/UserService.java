@@ -52,7 +52,9 @@ public class UserService {
         return true;
     }
 
-
+    public void deleteUser(Integer idUser){
+        storage.deleteUser(idUser);
+    }
 
 }
    /*
