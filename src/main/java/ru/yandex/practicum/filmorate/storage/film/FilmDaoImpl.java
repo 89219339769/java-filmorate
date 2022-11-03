@@ -5,13 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
 
 @Slf4j
@@ -25,23 +28,7 @@ public class FilmDaoImpl implements FilmStorage {
     }
 
 
-   /*
-    @Override
-    public Film addFilm(Film film) {
-        String sqlQuery = "insert into TABLE_FILMS(NAME,DESCRIPTION,RELEASE_DATE,duration,MPA_ID) " +
-                "values (?, ?, ?, ?,?)";
-        jdbcTemplate.update(sqlQuery,
-                film.getName(),
-                film.getDescription(),
-                Date.valueOf(film.getReleaseDate()),
-                film.getDuration(),
-                film.getMpa().getId());
-        return film;
-    }
 
-
-
-*/
      @Override
     public Film addFilm(Film film) {
         String sqlQuery = "INSERT INTO table_films (name, description, release_date, duration,MPA_ID) " +
@@ -59,9 +46,28 @@ public class FilmDaoImpl implements FilmStorage {
 
         film.setId((int) Objects.requireNonNull(keyHolder.getKey()).longValue());
         return film;
+
     }
 
 
+    @Override
+    public Collection<Film> getAllFilms() {
+        Collection<Film> films = new ArrayList<>();
+        SqlRowSet rs = jdbcTemplate.queryForRowSet("select FILM_ID, NAME, DESCRIPTION, RELEASE_DATE," +
+                " DURATION, MPA_ID  from TABLE_FILMS ");
+        while (rs.next()) {
+            Film film = new Film(
+                    rs.getInt("film_id"),
+                    rs.getString("name"),
+                    rs.getString("description"),
+                    rs.getDate("release_date").toLocalDate(),
+                    (rs.getInt("duration")),
+                    new Mpa(rs.getInt("MPA_ID"), rs.getString("NAME"))
+            );
+            films.add(film);
+        }
+        return films;
+    }
 
 
 
@@ -80,13 +86,20 @@ public class FilmDaoImpl implements FilmStorage {
         return null;
     }
 
-    @Override
-    public List<Film> getAllFilms() {
-        return null;
-    }
+
+
+
+
+
+
+
+
 
     @Override
     public Film findFilmById(int idFilm) {
         return null;
     }
 }
+
+
+

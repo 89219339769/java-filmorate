@@ -5,9 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import javax.validation.Valid;
-import java.util.List;
+import java.util.Collection;
 
 @RestController("")
 @Slf4j
@@ -23,6 +24,13 @@ public class FilmController {
     public Film addFilm(@Valid @RequestBody Film film) throws ValidationException {
         return filmService.addFilm(film);
     }
+
+    @GetMapping("/films")
+    public Collection<Film> allFilms(){
+        return filmService.getAllFilms();
+    }
+
+
 }
 /*
     @PutMapping("/films")

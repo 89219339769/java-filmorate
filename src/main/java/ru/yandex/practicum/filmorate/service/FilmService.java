@@ -11,8 +11,7 @@ import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Collection;
 
 @Slf4j
 @Service
@@ -47,6 +46,11 @@ public class FilmService {
             throw new ValidationException("продолжительность фильма должна быть положительной");
         }
         return true;
+    }
+
+
+    public Collection<Film> getAllFilms() {
+        return filmstorage.getAllFilms();
     }
 
 }
