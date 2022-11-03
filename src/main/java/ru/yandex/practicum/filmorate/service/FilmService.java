@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -17,23 +18,43 @@ import java.util.stream.Collectors;
 @Service
 public class FilmService {
     private static final LocalDate MIN_DATE_START_RELEASE = LocalDate.parse("1895-12-28");
-    private final FilmStorage inMemoryFilmStorage;
-    private final UserStorage inMemoryUserStorage;
+
+    private UserStorage userstorage;
+    private FilmStorage filmstorage;
     private final UserService userService;
 
 
     @Autowired
-    public FilmService(FilmStorage inMemoryFilmStorage, UserStorage inMemoryUserStorage, UserService userService) {
-        this.inMemoryFilmStorage = inMemoryFilmStorage;
-        this.inMemoryUserStorage = inMemoryUserStorage;
+    public FilmService(@Qualifier("FilmDaoImpl") FilmStorage filmstorage, @Qualifier("UserDaoImpl") UserStorage userstorage, UserService userService) {
+        this.userstorage = userstorage;
+        this.filmstorage = filmstorage;
         this.userService = userService;
     }
 
     public Film addFilm(Film film) {
         checkValidationFilm(film);
-        return inMemoryFilmStorage.addFilm(film);
+        return filmstorage.addFilm(film);
     }
 
+
+
+    public boolean checkValidationFilm(Film film) throws ValidationException {
+        if (film.getReleaseDate().isBefore(MIN_DATE_START_RELEASE)) {
+            log.info("Ошибка валидации: дата релиза — раньше 28 декабря 1895 года");
+            throw new ValidationException("дата релиза раньше 28 декабря 1895 года");
+        } else if (film.getDuration() < 0) {
+            log.info("Ошибка валидации: продолжительность фильма отрицательная");
+            throw new ValidationException("продолжительность фильма должна быть положительной");
+        }
+        return true;
+    }
+
+}
+
+
+
+
+/*
     public Film changeFilm(Film film) {
         checkValidationFilm(film);
         return inMemoryFilmStorage.changeFilm(film);
@@ -84,3 +105,5 @@ public class FilmService {
         return true;
     }
 }
+
+ */

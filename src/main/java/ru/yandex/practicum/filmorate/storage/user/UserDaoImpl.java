@@ -38,50 +38,53 @@ public class UserDaoImpl implements UserStorage {
                     rs.getDate("Birthday").toLocalDate()
             ));
         }
-        return  users;
+        return users;
     }
 
     @Override
     public User addUser(User user) {
-            String sqlQuery = "insert into USERS_TABLE(EMAIL,LOGIN,NAME,Birthday) " +
-                    "values (?, ?, ?, ?)";
-            jdbcTemplate.update(sqlQuery,
-                    user.getEmail(),
-                    user.getLogin(),
-                    user.getName(),
-                    user.getBirthday());
+        String sqlQuery = "insert into USERS_TABLE(EMAIL,LOGIN,NAME,Birthday) " +
+                "values (?, ?, ?, ?)";
+        jdbcTemplate.update(sqlQuery,
+                user.getEmail(),
+                user.getLogin(),
+                user.getName(),
+                user.getBirthday());
         return user;
-        }
+    }
 
     @Override
     public void deleteUser(Integer idUser) {
-            String sqlQuery = "delete from USERS_TABLE where USER_ID = ?";
-             jdbcTemplate.update(sqlQuery, idUser);
-        }
+        String sqlQuery = "delete from USERS_TABLE where USER_ID = ?";
+        jdbcTemplate.update(sqlQuery, idUser);
+    }
 
     @Override
     public User changeUser(User user) {
         if (user.getId() == null) {
             throw new ValidationException("Отсутствует id пользователя");
         }
-         List<User>users;
-     users= (List<User>) getAllUsers();
-User userTemp = users.get(user.getId());
+        List<User> users;
+        users = (List<User>) getAllUsers();
 
-            if (!users.contains( userTemp)) {
+       User userTemp = users.get(user.getId());
+
+
+          if (!users.contains( userTemp)) {
                 throw new FilmUserNotFoundException(String.format("Пользователя с id %s нет", user.getId()));
-            }
-            String sqlQuery = "update USERS_TABLE set " +
-                    "EMAIL = ?, LOGIN = ?, NAME = ?,Birthday = ?" +
-                    "where USER_ID = ?";
-            jdbcTemplate.update(sqlQuery,
-                    user.getEmail(),
-                    user.getLogin(),
-                    user.getName(),
-                    user.getBirthday(),
-                    user.getId());
-            return user;
-        }
+          }
+        String sqlQuery = "update USERS_TABLE set " +
+                "EMAIL = ?, LOGIN = ?, NAME = ?,Birthday = ?" +
+                "where USER_ID = ?";
+        jdbcTemplate.update(sqlQuery,
+                user.getEmail(),
+                user.getLogin(),
+                user.getName(),
+                user.getBirthday(),
+                user.getId());
+        return user;
+    }
+
 
     public Optional<User> findUserById(Integer id) {
         // выполняем запрос к базе данных.

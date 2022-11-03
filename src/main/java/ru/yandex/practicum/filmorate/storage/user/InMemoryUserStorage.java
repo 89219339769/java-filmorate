@@ -41,6 +41,7 @@ public class InMemoryUserStorage implements UserStorage {
         }
             users.put(user.getId(), user);
             log.info("Успешное изменение пользователя");
+
         return user;
     }
 

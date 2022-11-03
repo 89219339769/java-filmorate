@@ -9,10 +9,11 @@ import ru.yandex.practicum.filmorate.service.FilmService;
 import javax.validation.Valid;
 import java.util.List;
 
-@RestController
+@RestController("")
 @Slf4j
 public class FilmController {
     public final FilmService filmService;
+
     @Autowired
     public FilmController(FilmService filmService) {
         this.filmService = filmService;
@@ -22,7 +23,8 @@ public class FilmController {
     public Film addFilm(@Valid @RequestBody Film film) throws ValidationException {
         return filmService.addFilm(film);
     }
-
+}
+/*
     @PutMapping("/films")
     public Film changeFilm(@Valid @RequestBody Film film) throws ValidationException{
         return filmService.changeFilm(film);
@@ -59,3 +61,5 @@ public class FilmController {
         filmService.deleteFilm(id);
     }
 }
+
+*/
