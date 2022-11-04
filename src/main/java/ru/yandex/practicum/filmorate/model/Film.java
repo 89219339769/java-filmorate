@@ -64,4 +64,24 @@ public class Film {
     }
 
 
+
+    @Override
+    public boolean equals(Object o) {
+        // 1
+        if (this == o) {
+            return true;
+        }
+
+        // 2
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        // 3
+        Film film = (Film) o;
+        return id == film.id &&
+
+                id.equals(film.id);
+    }
+
 }
