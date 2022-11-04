@@ -53,8 +53,8 @@ public class FilmDaoImpl implements FilmStorage {
     @Override
     public Collection<Film> getAllFilms() {
         Collection<Film> films = new ArrayList<>();
-        SqlRowSet rs = jdbcTemplate.queryForRowSet("select FILM_ID, NAME, DESCRIPTION, RELEASE_DATE," +
-                " DURATION, MPA_ID  from TABLE_FILMS ");
+        SqlRowSet rs = jdbcTemplate.queryForRowSet("select f.FILM_ID, f.NAME, f.DESCRIPTION, f.RELEASE_DATE," +
+                " f.DURATION, f.MPA_ID,m.NAME as MPA_NAME FROM table_films AS f JOIN table_mpa AS m ON m.mpa_id = f.mpa_id; ");
         while (rs.next()) {
             Film film = new Film(
                     rs.getInt("film_id"),
@@ -62,7 +62,7 @@ public class FilmDaoImpl implements FilmStorage {
                     rs.getString("description"),
                     rs.getDate("release_date").toLocalDate(),
                     (rs.getInt("duration")),
-                    new Mpa(rs.getInt("MPA_ID"), rs.getString("NAME"))
+                    new Mpa(rs.getInt("MPA_ID"), rs.getString("MPA_NAME"))
             );
             films.add(film);
         }
