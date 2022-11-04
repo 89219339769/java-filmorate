@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -58,6 +58,12 @@ public class FilmService {
     public void deleteFilm(Integer idFilm) {
         filmstorage.deleteFilm(idFilm);
     }
+
+
+    public Optional<Object> findFilmById(int idFilm) {
+        return  filmstorage.findFilmById(idFilm);
+    }
+
 
 }
 

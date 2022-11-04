@@ -9,13 +9,13 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Mpa;
-import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 
 @Slf4j
 @Component("FilmDaoImpl")
@@ -80,6 +80,40 @@ public class FilmDaoImpl implements FilmStorage {
 
 
 
+    @Override
+    public Optional<Object> findFilmById(int idFilm) {
+
+        SqlRowSet userRows = jdbcTemplate.queryForRowSet("select f.FILM_ID, f.NAME, f.DESCRIPTION, f.RELEASE_DATE," +
+                " f.DURATION, f.MPA_ID,m.NAME as MPA_NAME FROM table_films AS f JOIN table_mpa AS m ON m.mpa_id = f.mpa_id " +
+                " where f.FILM_ID= ?", idFilm);
+
+        // обрабатываем результат выполнения запроса
+        if (userRows.next()) {
+            Film film = new Film(
+                    userRows.getInt("FILM_ID"),
+                    userRows.getString("name"),
+                    userRows.getString("description"),
+                    userRows.getDate("release_date").toLocalDate(),
+                    userRows.getInt("duration"),
+            new Mpa( userRows.getInt("MPA_ID"), userRows.getString("MPA_NAME")));
+
+            log.info("Найден пользователь: {} {}");
+
+            return Optional.of(film);
+        } else {
+            log.info("Пользователь с идентификатором {} не найден.", idFilm);
+            return Optional.empty();
+        }
+    }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -90,18 +124,11 @@ public class FilmDaoImpl implements FilmStorage {
 
 
 
-
-
-
-
-
-
-
-    @Override
-    public Film findFilmById(int idFilm) {
-        return null;
-    }
 }
+
+
+
+
 
 
 

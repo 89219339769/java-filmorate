@@ -5,11 +5,11 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.FilmUserNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -64,11 +64,11 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film findFilmById(int idFilm) {
+    public Optional<Object> findFilmById(int idFilm) {
 
         if (films.get(idFilm) == null) {
             throw new FilmUserNotFoundException("Нет такого фильма");
         }
-        return films.get(idFilm);
+        return Optional.ofNullable(films.get(idFilm));
     }
 }
