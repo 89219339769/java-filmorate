@@ -35,8 +35,6 @@ public class FilmService {
         return filmstorage.addFilm(film);
     }
 
-
-
     public boolean checkValidationFilm(Film film) throws ValidationException {
         if (film.getReleaseDate().isBefore(MIN_DATE_START_RELEASE)) {
             log.info("Ошибка валидации: дата релиза — раньше 28 декабря 1895 года");
@@ -47,79 +45,26 @@ public class FilmService {
         }
         return true;
     }
+
 
 
     public Collection<Film> getAllFilms() {
         return filmstorage.getAllFilms();
     }
 
-
-
     public void deleteFilm(Integer idFilm) {
         filmstorage.deleteFilm(idFilm);
     }
-
 
     public Optional<Object> findFilmById(int idFilm) {
         return  filmstorage.findFilmById(idFilm);
     }
 
-
-}
-
-
-
-
-/*
     public Film changeFilm(Film film) {
         checkValidationFilm(film);
-        return inMemoryFilmStorage.changeFilm(film);
-    }
-
-    public List<Film> getAllFilms() {
-        return inMemoryFilmStorage.getAllFilms();
-    }
-
-    public Film findFilmById(int idFilm) {
-        return inMemoryFilmStorage.findFilmById(idFilm);
-    }
-
-    public void deleteFilm(Integer idFilm) {
-        inMemoryFilmStorage.deleteFilm(idFilm);
-    }
-
-
-    public void addLike(int idUser, int idFilm) {
-        Film film = inMemoryFilmStorage.findFilmById(idFilm);
-        User user = userService.findUserById(idUser).get();
-        film.setLike(user.getId());
-    }
-
-    public void deleteLike(int idFilm, int idUser) {
-        Film film = inMemoryFilmStorage.findFilmById(idFilm);
-        User user = userService.findUserById(idUser).get();
-        film.getLike().remove(user.getId());
-    }
-
-    public List<Film> bestFilmByLike(Integer count) {
-        return inMemoryFilmStorage.getAllFilms().stream()
-                .sorted((o1, o2) -> {
-                    int result = Integer.valueOf(o1.getLike().size()).compareTo(Integer.valueOf(o2.getLike().size()));
-                    return result * -1;
-                }).limit(count)
-                .collect(Collectors.toList());
-    }
-
-    public boolean checkValidationFilm(Film film) throws ValidationException {
-        if (film.getReleaseDate().isBefore(MIN_DATE_START_RELEASE)) {
-            log.info("Ошибка валидации: дата релиза — раньше 28 декабря 1895 года");
-            throw new ValidationException("дата релиза раньше 28 декабря 1895 года");
-        } else if (film.getDuration() < 0) {
-            log.info("Ошибка валидации: продолжительность фильма отрицательная");
-            throw new ValidationException("продолжительность фильма должна быть положительной");
-        }
-        return true;
+        return filmstorage.changeFilm(film);
     }
 }
 
- */
+
+

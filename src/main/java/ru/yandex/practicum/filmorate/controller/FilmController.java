@@ -42,6 +42,11 @@ public class FilmController {
         return filmService.findFilmById(id);
     }
 
+    @PutMapping("/films")
+    public Film changeFilm(@Valid @RequestBody Film film) throws ValidationException{
+        return filmService.changeFilm(film);
+    }
+
 
 
 }

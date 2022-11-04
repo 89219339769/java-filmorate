@@ -7,15 +7,15 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exceptions.FilmUserNotFoundException;
+import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Mpa;
+import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Component("FilmDaoImpl")
@@ -27,9 +27,7 @@ public class FilmDaoImpl implements FilmStorage {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
-
-     @Override
+    @Override
     public Film addFilm(Film film) {
         String sqlQuery = "INSERT INTO table_films (name, description, release_date, duration,MPA_ID) " +
                 "VALUES (?, ?, ?, ?, ?);";
@@ -48,7 +46,6 @@ public class FilmDaoImpl implements FilmStorage {
         return film;
 
     }
-
 
     @Override
     public Collection<Film> getAllFilms() {
@@ -70,14 +67,11 @@ public class FilmDaoImpl implements FilmStorage {
     }
 
 
-
     @Override
     public void deleteFilm(Integer idFilm) {
         String sqlQuery = "delete from TABLE_FILMS where FILM_ID = ?";
         jdbcTemplate.update(sqlQuery, idFilm);
     }
-
-
 
 
     @Override
@@ -95,7 +89,7 @@ public class FilmDaoImpl implements FilmStorage {
                     userRows.getString("description"),
                     userRows.getDate("release_date").toLocalDate(),
                     userRows.getInt("duration"),
-            new Mpa( userRows.getInt("MPA_ID"), userRows.getString("MPA_NAME")));
+                    new Mpa(userRows.getInt("MPA_ID"), userRows.getString("MPA_NAME")));
 
             log.info("Найден пользователь: {} {}");
 
@@ -107,24 +101,35 @@ public class FilmDaoImpl implements FilmStorage {
     }
 
 
-
-
-
-
-
-
-
-
-
-
     @Override
     public Film changeFilm(Film film) {
-        return null;
+        if (film.getId() == null) {
+            throw new ValidationException("Отсутствует id фильма");
+        }
+
+        List<Film> films = (List<Film>) getAllFilms();
+
+        int temp;
+        temp = film.getId();
+
+        if (!films.contains(films.get(temp))) {
+            throw new FilmUserNotFoundException(String.format("Фильма с id  нет"));
+        }
+
+
+        String sqlQuery = " UPDATE TABLE_FILMS SET name = ?, description = ?, release_date = ?, duration = ?, mpa_id = ? " +
+                " WHERE FILM_id = ?";
+        jdbcTemplate.update(sqlQuery,
+                film.getName(),
+                film.getDescription(),
+                film.getReleaseDate(),
+                film.getDuration(),
+                film.getMpa().getId(),
+                film.getId());
+        return film;
     }
-
-
-
 }
+
 
 
 

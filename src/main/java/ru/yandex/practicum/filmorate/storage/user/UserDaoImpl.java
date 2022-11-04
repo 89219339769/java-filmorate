@@ -66,9 +66,7 @@ public class UserDaoImpl implements UserStorage {
         }
         List<User> users;
         users = (List<User>) getAllUsers();
-
        User userTemp = users.get(user.getId());
-
 
           if (!users.contains( userTemp)) {
                 throw new FilmUserNotFoundException(String.format("Пользователя с id %s нет", user.getId()));
