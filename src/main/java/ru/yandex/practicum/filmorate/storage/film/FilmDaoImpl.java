@@ -71,15 +71,17 @@ public class FilmDaoImpl implements FilmStorage {
 
 
 
-
-
-
-
-
     @Override
     public void deleteFilm(Integer idFilm) {
-
+        String sqlQuery = "delete from TABLE_FILMS where FILM_ID = ?";
+        jdbcTemplate.update(sqlQuery, idFilm);
     }
+
+
+
+
+
+
 
     @Override
     public Film changeFilm(Film film) {

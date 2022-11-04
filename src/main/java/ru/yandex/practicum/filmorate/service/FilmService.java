@@ -53,6 +53,12 @@ public class FilmService {
         return filmstorage.getAllFilms();
     }
 
+
+
+    public void deleteFilm(Integer idFilm) {
+        filmstorage.deleteFilm(idFilm);
+    }
+
 }
 
 

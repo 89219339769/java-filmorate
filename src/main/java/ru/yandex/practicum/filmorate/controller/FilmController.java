@@ -31,6 +31,12 @@ public class FilmController {
     }
 
 
+
+    @DeleteMapping("/films/{id}")
+    public void deleteFilm(@PathVariable Integer id){
+        filmService.deleteFilm(id);
+    }
+
 }
 /*
     @PutMapping("/films")
