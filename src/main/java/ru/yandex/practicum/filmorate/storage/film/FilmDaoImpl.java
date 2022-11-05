@@ -109,8 +109,7 @@ public class FilmDaoImpl implements FilmStorage {
 
         List<Film> films = (List<Film>) getAllFilms();
 
-        int temp;
-        temp = film.getId();
+
 
         if (!films.contains(film)) {
             throw new FilmUserNotFoundException(String.format("Фильма с id  нет"));

@@ -66,9 +66,7 @@ public class UserDaoImpl implements UserStorage {
         }
         List<User> users;
         users = (List<User>) getAllUsers();
-       User userTemp = users.get(user.getId());
-
-          if (!users.contains( userTemp)) {
+          if (!users.contains(user)) {
                 throw new FilmUserNotFoundException(String.format("Пользователя с id %s нет", user.getId()));
           }
         String sqlQuery = "update USERS_TABLE set " +
@@ -82,7 +80,6 @@ public class UserDaoImpl implements UserStorage {
                 user.getId());
         return user;
     }
-
 
     public Optional<User> findUserById(Integer id) {
         // выполняем запрос к базе данных.

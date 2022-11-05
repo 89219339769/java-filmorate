@@ -46,7 +46,7 @@ public class Film {
 
     @Builder
     public Film(Integer id, @NonNull String name, String description, LocalDate releaseDate, Integer duration, Mpa mpa) {
-        this.id =id;
+        this.id = id;
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
@@ -67,21 +67,16 @@ public class Film {
 
     @Override
     public boolean equals(Object o) {
-        // 1
         if (this == o) {
             return true;
         }
-
-        // 2
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
-        // 3
         Film film = (Film) o;
         return id == film.id &&
-
                 id.equals(film.id);
     }
-
 }
+
+
