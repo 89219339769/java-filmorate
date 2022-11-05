@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage.user;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -10,10 +11,10 @@ import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.*;
 
 @Slf4j
 @Component("UserDaoImpl")
@@ -66,9 +67,9 @@ public class UserDaoImpl implements UserStorage {
         }
         List<User> users;
         users = (List<User>) getAllUsers();
-          if (!users.contains(user)) {
-                throw new FilmUserNotFoundException(String.format("Пользователя с id %s нет", user.getId()));
-          }
+        if (!users.contains(user)) {
+            throw new FilmUserNotFoundException(String.format("Пользователя с id %s нет", user.getId()));
+        }
         String sqlQuery = "update USERS_TABLE set " +
                 "EMAIL = ?, LOGIN = ?, NAME = ?,Birthday = ?" +
                 "where USER_ID = ?";
@@ -78,6 +79,9 @@ public class UserDaoImpl implements UserStorage {
                 user.getName(),
                 user.getBirthday(),
                 user.getId());
+        deleteFriends(user);
+        insertFriends(user);
+
         return user;
     }
 
@@ -93,25 +97,82 @@ public class UserDaoImpl implements UserStorage {
                     userRows.getString("login"),
                     userRows.getString("name"),
                     userRows.getDate("Birthday").toLocalDate());
-
+            user.setFriends((Set<User>) getUserFriends(user.getId()));
             log.info("Найден пользователь: {} {}");
-
             return Optional.of(user);
         } else {
             log.info("Пользователь с идентификатором {} не найден.", id);
             return Optional.empty();
         }
     }
+
     @Override
     public void addInFriend(long userId, long friendId) {
         final String sqlQuery = "insert into FRIENDSHIP (USER_ID, FRIEND_ID) " +
                 "values (?, ?)";
         jdbcTemplate.update(sqlQuery, userId, friendId);
+
+        User friend = findUserById((int) friendId).get();
+        User user = findUserById((int) userId).get();
+        user.addFriend(friend);
+
+
+        changeUser(user);
+
+
+        // свсе правильно ероме аптейт юзер и файнд юзер
     }
+
+
+    private void insertFriends(User user) {
+        if (user.getFriends().isEmpty()) {
+            return;
+        }
+        String sql = "insert into FRIENDSHIP (FRIEND_ID, USER_ID) values (?, ?)";
+
+        try (Connection connection = jdbcTemplate.getDataSource().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            for (User friend : user.getFriends()) {
+                ps.setLong(1, friend.getId());
+                ps.setLong(2, user.getId());
+                ps.addBatch();
+            }
+            ps.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public Collection<User> getUserFriends(Integer id) {
+        final String sqlCnt = "SELECT COUNT(*) From USERS WHERE USER_ID=?";
+
+
+        final String sql = "SELECT * From USERS_TABLE where USER_ID IN (SELECT FRIEND_ID FROM FRIENDSHIP where USER_ID = ?)";
+        Collection<User> friends = new HashSet<>();
+        SqlRowSet rs = jdbcTemplate.queryForRowSet(sql, id);
+        while (rs.next()) {
+            friends.add(new User( // Long id, @Valid String email, @Valid String login, String name, LocalDate birthday
+                    rs.getInt("USER_ID"),
+                    rs.getString("EMAIL"),
+                    rs.getString("LOGIN"),
+                    rs.getString("NAME"),
+                    rs.getDate("BIRTHDAY").toLocalDate()
+            ));
+        }
+        return friends;
+    }
+
 
     @Override
     public void addFriends(Integer userId, Integer friendId) {
 
+    }
+
+
+    private void deleteFriends(User user) {
+        final String sql = "DELETE FROM FRIENDSHIP where USER_ID = ?";
+        jdbcTemplate.update(sql, user.getId());
     }
 
 
