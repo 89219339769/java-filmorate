@@ -46,7 +46,7 @@ public class UserController {
 
     @ResponseBody
     @PutMapping
-    public User changeUser(@Valid @RequestBody User user){
+    public User changeUser(@Valid @RequestBody User user) throws SQLException {
         return  userService.changeUser(user);
     }
 

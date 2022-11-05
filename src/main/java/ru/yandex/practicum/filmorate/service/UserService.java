@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exceptions.FilmUserNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
@@ -46,10 +47,24 @@ public class UserService {
     }
 
 
-    public User changeUser(User user) {
+
+
+
+    public User changeUser(User user) throws SQLException {
         checkValidationUser(user);
-        return storage.changeUser(user);
+        List<User> users;
+          users = (List<User>) getAllUsers();
+//
+        Optional<User> res = Optional.ofNullable(users.get(user.getId()));
+        if (res.isPresent()) {
+            return res.get();
+        }
+         throw new FilmUserNotFoundException(String.format("Пользователя с id %s нет", user.getId()));
     }
+
+
+
+
 
 
     public boolean checkValidationUser(User user) {

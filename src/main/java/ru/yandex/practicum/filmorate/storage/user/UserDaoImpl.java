@@ -65,25 +65,29 @@ public class UserDaoImpl implements UserStorage {
         if (user.getId() == null) {
             throw new ValidationException("Отсутствует id пользователя");
         }
-        List<User> users;
-        users = (List<User>) getAllUsers();
-        if (!users.contains(user.getId())) {
-           throw new FilmUserNotFoundException(String.format("Пользователя с id %s нет", user.getId()));
-        }
-        String sqlQuery = "update USERS_TABLE set " +
-                "EMAIL = ?, LOGIN = ?, NAME = ?,Birthday = ?" +
-                "where USER_ID = ?";
-        jdbcTemplate.update(sqlQuery,
-                user.getEmail(),
-                user.getLogin(),
-                user.getName(),
-                user.getBirthday(),
-                user.getId());
-        deleteFriends(user);
-        insertFriendsip(user);
+     //   List<User> users;
+     //   users = (List<User>) getAllUsers();
+//
+     //   int temp = user.getId();
+    //    for (int i = 0; i < users.size(); i++) {
+     //       if (users.get(i).getId() == temp) {
+    //            throw new FilmUserNotFoundException(String.format("Пользователя с id %s нет", user.getId()));
+     //       }
+   //     }
+            String sqlQuery = "update USERS_TABLE set " +
+                    "EMAIL = ?, LOGIN = ?, NAME = ?,Birthday = ?" +
+                    "where USER_ID = ?";
+            jdbcTemplate.update(sqlQuery,
+                    user.getEmail(),
+                    user.getLogin(),
+                    user.getName(),
+                    user.getBirthday(),
+                    user.getId());
+            deleteFriends(user);
+            insertFriendsip(user);
 
-        return user;
-    }
+            return user;
+        }
 
     public Optional<User> findUserById(Integer id) {
         // выполняем запрос к базе данных.
