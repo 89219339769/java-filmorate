@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -48,7 +49,13 @@ public class UserController {
         return  userService.changeUser(user);
     }
 
+    @PutMapping("/{id}/friends/{friendId}")
+    public void addInFriends(@PathVariable("id") long userId,
+                                                   @PathVariable("friendId") long friendId) throws SQLException {
 
+        userService.addInFriend(userId, friendId);
+
+    }
 }
     /*
     public final UserService userService;

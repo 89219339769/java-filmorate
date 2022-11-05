@@ -19,7 +19,7 @@ public class User {
     private String name;
     @NotNull
     private LocalDate birthday;
-    private final Set<Integer> friends = new HashSet<>();
+    private final Set<User> friends = new HashSet<>();
 
     public User(Integer id, String email, String name, String login, LocalDate birthday) {
         this.id = id;
@@ -32,6 +32,13 @@ public class User {
             this.birthday = birthday;
         }
     }
+
+
+    public void addFriend(User user) {
+        this.friends.add(user);
+    }
+
+
 
 
     @Override

@@ -3,16 +3,16 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
-import ru.yandex.practicum.filmorate.storage.user.UserDaoImpl;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 @Slf4j
 @Service
@@ -21,8 +21,6 @@ public class UserService {
 
     @Autowired
     public UserService(@Qualifier("UserDaoImpl") UserStorage storage) {
-
-
         this.storage = storage;
     }
 
@@ -63,6 +61,16 @@ public class UserService {
         }
         return true;
     }
+
+
+    public void addInFriend(long userId, long friendId) {
+
+           storage.addInFriend(userId, friendId);
+
+
+    }
+
+
 
 }
  /*

@@ -55,6 +55,16 @@ public class InMemoryUserStorage implements UserStorage {
         }
           return Optional.ofNullable(users.get(id));
     }
+
+    @Override
+    public void addInFriend(long userId, long friendId) {
+
+    }
+
+    @Override
+    public void addFriends(Integer userId, Integer friendId) {
+
+    }
 }
 
 

@@ -11,6 +11,12 @@ public interface UserStorage {
         void deleteUser(Integer idUser);
         User changeUser(User user);
         Optional<User> findUserById(Integer id);
+
+
+
+        void addInFriend(long userId, long friendId);
+
+        void addFriends(Integer userId, Integer friendId);
 }
 
 

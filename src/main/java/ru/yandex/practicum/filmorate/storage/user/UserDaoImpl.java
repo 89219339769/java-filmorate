@@ -102,4 +102,17 @@ public class UserDaoImpl implements UserStorage {
             return Optional.empty();
         }
     }
+    @Override
+    public void addInFriend(long userId, long friendId) {
+        final String sqlQuery = "insert into FRIENDSHIP (USER_ID, FRIEND_ID) " +
+                "values (?, ?)";
+        jdbcTemplate.update(sqlQuery, userId, friendId);
+    }
+
+    @Override
+    public void addFriends(Integer userId, Integer friendId) {
+
+    }
+
+
 }
