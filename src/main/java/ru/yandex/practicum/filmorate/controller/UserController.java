@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.service.UserService;
 import javax.validation.Valid;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @RestController("")
@@ -56,6 +57,15 @@ public class UserController {
         userService.addInFriend(userId, friendId);
 
     }
+
+    @GetMapping("/users/{id}/friends/common/{otherId}")
+    public List<User> getCommonFriends(@PathVariable("id") int idUser, @PathVariable("otherId") int idOther){
+        return userService.getCommonFriends(idUser, idOther);
+    }
+
+
+
+
 }
     /*
     public final UserService userService;
@@ -76,7 +86,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}/friends/common/{otherId}")
-    public List<User> findCommonFriends(@PathVariable("id") int idUser, @PathVariable("otherId") int idOther){
+    public List<User> getCommonFriends(@PathVariable("id") int idUser, @PathVariable("otherId") int idOther){
         return userService.findCommonFriends(idUser, idOther);
     }
 

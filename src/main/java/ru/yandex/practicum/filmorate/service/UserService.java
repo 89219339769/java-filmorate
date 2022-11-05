@@ -13,7 +13,10 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 public class UserService {
@@ -67,10 +70,13 @@ public class UserService {
 
            storage.addInFriend(userId, friendId);
 
-
     }
 
-
+    public List<User> getCommonFriends(Integer id,Integer otherId) {
+        Collection<User> first =  storage.getUserFriends(id);
+        Collection<User> second =  storage.getUserFriends(otherId);
+        return first.stream().filter(second::contains).collect(Collectors.toList());
+    }
 
 }
  /*

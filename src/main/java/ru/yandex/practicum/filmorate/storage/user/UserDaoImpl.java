@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.storage.user;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -38,6 +37,7 @@ public class UserDaoImpl implements UserStorage {
                     rs.getString("NAME"),
                     rs.getDate("Birthday").toLocalDate()
             ));
+
         }
         return users;
     }
@@ -67,8 +67,8 @@ public class UserDaoImpl implements UserStorage {
         }
         List<User> users;
         users = (List<User>) getAllUsers();
-        if (!users.contains(user)) {
-            throw new FilmUserNotFoundException(String.format("Пользователя с id %s нет", user.getId()));
+        if (!users.contains(user.getId())) {
+           throw new FilmUserNotFoundException(String.format("Пользователя с id %s нет", user.getId()));
         }
         String sqlQuery = "update USERS_TABLE set " +
                 "EMAIL = ?, LOGIN = ?, NAME = ?,Birthday = ?" +
@@ -80,7 +80,7 @@ public class UserDaoImpl implements UserStorage {
                 user.getBirthday(),
                 user.getId());
         deleteFriends(user);
-        insertFriends(user);
+        insertFriendsip(user);
 
         return user;
     }
@@ -108,9 +108,9 @@ public class UserDaoImpl implements UserStorage {
 
     @Override
     public void addInFriend(long userId, long friendId) {
-        final String sqlQuery = "insert into FRIENDSHIP (USER_ID, FRIEND_ID) " +
-                "values (?, ?)";
-        jdbcTemplate.update(sqlQuery, userId, friendId);
+     //   final String sqlQuery = "insert into FRIENDSHIP (USER_ID, FRIEND_ID) " +
+     //           "values (?, ?)";
+      //  jdbcTemplate.update(sqlQuery, userId, friendId);
 
         User friend = findUserById((int) friendId).get();
         User user = findUserById((int) userId).get();
@@ -124,7 +124,7 @@ public class UserDaoImpl implements UserStorage {
     }
 
 
-    private void insertFriends(User user) {
+    private void insertFriendsip(User user) {
         if (user.getFriends().isEmpty()) {
             return;
         }
@@ -143,7 +143,7 @@ public class UserDaoImpl implements UserStorage {
         }
     }
 
-
+@Override
     public Collection<User> getUserFriends(Integer id) {
         final String sqlCnt = "SELECT COUNT(*) From USERS WHERE USER_ID=?";
 
