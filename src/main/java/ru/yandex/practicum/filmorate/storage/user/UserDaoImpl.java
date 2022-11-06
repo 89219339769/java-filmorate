@@ -98,7 +98,7 @@ public class UserDaoImpl implements UserStorage {
     }
 
     @Override
-    public void addInFriend(long userId, long friendId) {
+    public void addFriend(long userId, long friendId) {
         User friend = findUserById((int) friendId).get();
         User user = findUserById((int) userId).get();
         user.addFriend(friend);
@@ -127,8 +127,6 @@ public class UserDaoImpl implements UserStorage {
 
 @Override
     public Collection<User> getUserFriends(Integer id) {
-        final String sqlCnt = "SELECT COUNT(*) From USERS WHERE USER_ID=?";
-
 
         final String sql = "SELECT * From USERS_TABLE where USER_ID IN (SELECT FRIEND_ID FROM FRIENDSHIP where USER_ID = ?)";
         Collection<User> friends = new HashSet<>();
@@ -146,10 +144,7 @@ public class UserDaoImpl implements UserStorage {
     }
 
 
-    @Override
-    public void addFriends(Integer userId, Integer friendId) {
 
-    }
 
 
     private void deleteFriends(User user) {

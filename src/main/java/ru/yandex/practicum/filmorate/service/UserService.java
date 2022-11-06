@@ -76,8 +76,8 @@ public class UserService {
     }
 
 
-    public void addInFriend(long userId, long friendId) {
-           storage.addInFriend(userId, friendId);
+    public void addFriend(long userId, long friendId) {
+           storage.addFriend(userId, friendId);
 
     }
 

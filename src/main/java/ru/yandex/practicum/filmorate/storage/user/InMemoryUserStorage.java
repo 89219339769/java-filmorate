@@ -56,8 +56,8 @@ public class InMemoryUserStorage implements UserStorage {
           return Optional.ofNullable(users.get(id));
     }
 
-    @Override
-    public void addInFriend(long userId, long friendId) {
+
+    public void addFriend(long userId, long friendId) {
 
     }
 
@@ -66,10 +66,7 @@ public class InMemoryUserStorage implements UserStorage {
         return null;
     }
 
-    @Override
-    public void addFriends(Integer userId, Integer friendId) {
 
-    }
 }
 
 
