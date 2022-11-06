@@ -26,18 +26,17 @@ public class UserDaoImpl implements UserStorage {
 
     public Collection<User> getAllUsers() {
         final String sql = "Select * from USERS_TABLE";
-
         Collection<User> users = new ArrayList<>();
-
         SqlRowSet rs = jdbcTemplate.queryForRowSet(sql);
         while (rs.next()) {
-            users.add(new User(rs.getInt("USER_ID"),
-                    rs.getString("EMAIL"),
-                    rs.getString("LOGIN"),
-                    rs.getString("NAME"),
-                    rs.getDate("Birthday").toLocalDate()
-            ));
-
+            User user = new User(
+                    rs.getInt("USER_ID"),
+                    rs.getString("email"),
+                    rs.getString("login"),
+                    rs.getString("name"),
+                    rs.getDate("Birthday").toLocalDate());
+            user.setFriends((Set<User>) getUserFriends( rs.getInt("USER_ID")));
+            users.add(user);
         }
         return users;
     }
@@ -65,15 +64,7 @@ public class UserDaoImpl implements UserStorage {
         if (user.getId() == null) {
             throw new ValidationException("Отсутствует id пользователя");
         }
-     //   List<User> users;
-     //   users = (List<User>) getAllUsers();
-//
-     //   int temp = user.getId();
-    //    for (int i = 0; i < users.size(); i++) {
-     //       if (users.get(i).getId() == temp) {
-    //            throw new FilmUserNotFoundException(String.format("Пользователя с id %s нет", user.getId()));
-     //       }
-   //     }
+
             String sqlQuery = "update USERS_TABLE set " +
                     "EMAIL = ?, LOGIN = ?, NAME = ?,Birthday = ?" +
                     "where USER_ID = ?";
@@ -85,15 +76,11 @@ public class UserDaoImpl implements UserStorage {
                     user.getId());
             deleteFriends(user);
             insertFriendsip(user);
-
             return user;
         }
 
     public Optional<User> findUserById(Integer id) {
-        // выполняем запрос к базе данных.
         SqlRowSet userRows = jdbcTemplate.queryForRowSet("select * from USERS_TABLE where USER_ID = ?", id);
-
-        // обрабатываем результат выполнения запроса
         if (userRows.next()) {
             User user = new User(
                     userRows.getInt("USER_ID"),
@@ -112,19 +99,10 @@ public class UserDaoImpl implements UserStorage {
 
     @Override
     public void addInFriend(long userId, long friendId) {
-     //   final String sqlQuery = "insert into FRIENDSHIP (USER_ID, FRIEND_ID) " +
-     //           "values (?, ?)";
-      //  jdbcTemplate.update(sqlQuery, userId, friendId);
-
         User friend = findUserById((int) friendId).get();
         User user = findUserById((int) userId).get();
         user.addFriend(friend);
-
-
         changeUser(user);
-
-
-        // свсе правильно ероме аптейт юзер и файнд юзер
     }
 
 

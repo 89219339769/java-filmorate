@@ -47,9 +47,6 @@ public class UserService {
     }
 
 
-
-
-
     public User changeUser(User user) throws SQLException {
         checkValidationUser(user);
         List<User> users;
@@ -61,8 +58,6 @@ public class UserService {
         }
          throw new FilmUserNotFoundException(String.format("Пользователя с id %s нет", user.getId()));
     }
-
-
 
 
 
@@ -82,7 +77,6 @@ public class UserService {
 
 
     public void addInFriend(long userId, long friendId) {
-
            storage.addInFriend(userId, friendId);
 
     }
