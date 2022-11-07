@@ -22,7 +22,7 @@ public class Film {
 
     private Integer rate; //= LikesRating.G;
     private Integer id;
-    final private Set<Long> likes;
+    private Set<User> likes;
 
     @NonNull
     @NotBlank
@@ -55,16 +55,18 @@ public class Film {
         this.mpa = mpa;
     }
 
-    public void addLike(Long filmId) {
-        likes.add(filmId);
+    public void addLike(User user) {
+
+        likes.add(user);
     }
 
     public void removeLike(Long userId) {
         likes.remove(userId);
     }
+}
 
 
-
+/*
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -80,3 +82,4 @@ public class Film {
 }
 
 
+*/

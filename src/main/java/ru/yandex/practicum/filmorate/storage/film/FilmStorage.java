@@ -11,5 +11,4 @@ public interface FilmStorage {
     Film changeFilm(Film film);
     Collection<Film> getAllFilms();
     Optional<Object> findFilmById(int idFilm);
-
 }

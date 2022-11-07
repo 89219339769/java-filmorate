@@ -12,16 +12,19 @@ import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.user.UserDaoImpl;
 
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 
 @Slf4j
 @Component("FilmDaoImpl")
 public class FilmDaoImpl implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
-
+    UserDaoImpl userDaoImpl;
     @Autowired
     public FilmDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -74,6 +77,14 @@ public class FilmDaoImpl implements FilmStorage {
     }
 
 
+    private void deleteLikes(Film film) {
+        final String sql = "DELETE FROM LIKES where USER_ID = ?";
+        jdbcTemplate.update(sql, film.getId());
+    }
+
+
+
+
     @Override
     public Optional<Object> findFilmById(int idFilm) {
 
@@ -90,17 +101,42 @@ public class FilmDaoImpl implements FilmStorage {
                     userRows.getDate("release_date").toLocalDate(),
                     userRows.getInt("duration"),
                     new Mpa(userRows.getInt("MPA_ID"), userRows.getString("MPA_NAME")));
-
-            log.info("Найден пользователь: {} {}");
+           film.setLikes((Set<User>)getFilmLikes(film.getId()));
+            log.info("Найден фильм: {} {}");
 
             return Optional.of(film);
         } else {
-            log.info("Пользователь с идентификатором {} не найден.", idFilm);
+            log.info("фильм с идентификатором {} не найден.", idFilm);
             return Optional.empty();
         }
     }
 
+        public Collection<User> getFilmLikes(Integer id) {
 
+            final String sql = "SELECT * From USERS_TABLE where  USER_ID = ?";
+            Collection<User> likes = new HashSet<>();
+            SqlRowSet rs = jdbcTemplate.queryForRowSet(sql, id);
+            while (rs.next()) {
+                likes.add(new User( // Long id, @Valid String email, @Valid String login, String name, LocalDate birthday
+                        rs.getInt("USER_ID"),
+                        rs.getString("EMAIL"),
+                        rs.getString("LOGIN"),
+                        rs.getString("NAME"),
+                        rs.getDate("BIRTHDAY").toLocalDate()
+                ));
+            }
+            return  likes;
+        }
+
+
+
+
+
+
+
+
+
+/*
     @Override
     public Film changeFilm(Film film) {
         if (film.getId() == null) {
@@ -127,6 +163,52 @@ public class FilmDaoImpl implements FilmStorage {
                 film.getId());
         return film;
     }
+
+*/
+
+
+    public Film changeFilm(Film film) {
+        if (film.getId() == null) {
+            throw new ValidationException("Отсутствует id фильма");
+        }
+
+        String sqlQuery = " UPDATE TABLE_FILMS SET name = ?, description = ?, release_date = ?, duration = ?, mpa_id = ? " +
+                " WHERE FILM_id = ?";
+        jdbcTemplate.update(sqlQuery,
+                film.getName(),
+                film.getDescription(),
+                film.getReleaseDate(),
+                film.getDuration(),
+                film.getMpa().getId(),
+                film.getId());
+
+          deleteLikes(film);
+          insertLike(film);
+        return film;
+
+    }
+
+
+
+    private void insertLike(Film film) {
+        if (film.getLikes().isEmpty()) {
+            return;
+        }
+        String sql = "insert into LIKES (FILM_ID, USER_ID) values (?, ?)";
+
+        try (Connection connection = jdbcTemplate.getDataSource().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            for (User like : film.getLikes()) {
+                ps.setLong(1, like.getId());
+                ps.setLong(2, film.getId());
+                ps.addBatch();
+            }
+            ps.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
 
