@@ -2,12 +2,14 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @RestController("")
@@ -59,14 +61,21 @@ public class FilmController {
 
 
 
+ //   @GetMapping("/popular")
+ //   public Collection<Film> getPopular(@RequestParam(required = false, defaultValue = "10", name = "count") Integer count) {
+  //      return filmService.getMostPopular(count);
+  //  }
+
+    @GetMapping("/films/popular")
+    public List<Film> bestFilmByLike(
+            @RequestParam(value = "count", defaultValue = "10", required = false) Integer count){
+        return filmService.getMostPopular(count);
+    }
+
+
+
 }
 /*
-
-
-
-
-
-
 
 
 

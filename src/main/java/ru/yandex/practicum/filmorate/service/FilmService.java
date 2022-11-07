@@ -12,6 +12,7 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -83,6 +84,14 @@ public class FilmService {
         checkValidationFilm(film);
         return filmstorage.changeFilm(film);
     }
+
+
+    public List<Film> getMostPopular(Integer count) {
+        return filmstorage.getMostPopular(count);
+    }
+
+
+
 }
 
 

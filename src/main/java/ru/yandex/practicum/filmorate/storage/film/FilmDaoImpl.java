@@ -3,6 +3,9 @@ package ru.yandex.practicum.filmorate.storage.film;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -176,6 +179,37 @@ public class FilmDaoImpl implements FilmStorage {
     public void addNewGenreToFilm(Long filmId, Genre genre) {
         String sql = "insert into FILMS_GENRES(FILM_ID, GENRE_ID) values  (?, ?)";
         jdbcTemplate.update(sql, filmId, genre.getId());
+    }
+
+
+    @Override
+    public List<Film> getMostPopular(Integer count) {
+        String sql = "select F.FILM_ID, F.NAME, F.DESCRIPTION, F.RELEASE_DATE,  F.DURATION, F.MPA_ID, F.NAME as MPAA_NAME " +
+                "from TABLE_FILMS F LEFT JOIN  LIKES L on F.FILM_ID  = L.FILM_ID " +
+                "GROUP BY F.FILM_ID, L.USER_ID ORDER BY COUNT(L.USER_ID) DESC LIMIT :count";
+
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("count", count);
+
+        NamedParameterJdbcTemplate nPJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+
+        List<Film> films = nPJdbcTemplate.query(sql,
+                namedParameters,
+                (rs, rowNum) ->
+                {
+                    Film film = new Film(
+                            rs.getInt("film_id"),
+                            rs.getString("name"),
+                            rs.getString("description"),
+                            rs.getDate("release_date").toLocalDate(),
+                            (rs.getInt("duration")),
+                            new Mpa(rs.getInt("MPA_ID"), rs.getString("MPAA_NAME"))
+                    );
+                    getFilmLikes(film.getId());
+                    return film;
+                }
+        );
+        return films;
     }
 
 
