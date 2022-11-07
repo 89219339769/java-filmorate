@@ -69,10 +69,7 @@ public class FilmController {
 
 
 
-    @DeleteMapping("/films/{id}/like/{userId}")
-    public void deleteLike(@PathVariable int id, @PathVariable int userId){
-        filmService.deleteLike(id, userId);
-    }
+
 
     @GetMapping("/films/popular")
     public List<Film> bestFilmByLike(
@@ -80,10 +77,6 @@ public class FilmController {
         return filmService.bestFilmByLike(count);
     }
 
-    @DeleteMapping("/films/{id}")
-    public void deleteFilm(@PathVariable Integer id){
-        filmService.deleteFilm(id);
-    }
-}
+
 
 */

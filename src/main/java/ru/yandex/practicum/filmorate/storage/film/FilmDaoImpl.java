@@ -9,14 +9,13 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserDaoImpl;
 
-import java.sql.Connection;
+import java.sql.*;
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.*;
 
 @Slf4j
@@ -130,42 +129,6 @@ public class FilmDaoImpl implements FilmStorage {
 
 
 
-
-
-
-
-
-/*
-    @Override
-    public Film changeFilm(Film film) {
-        if (film.getId() == null) {
-            throw new ValidationException("Отсутствует id фильма");
-        }
-
-        List<Film> films = (List<Film>) getAllFilms();
-
-
-
-        if (!films.contains(film)) {
-            throw new FilmUserNotFoundException(String.format("Фильма с id  нет"));
-        }
-
-
-        String sqlQuery = " UPDATE TABLE_FILMS SET name = ?, description = ?, release_date = ?, duration = ?, mpa_id = ? " +
-                " WHERE FILM_id = ?";
-        jdbcTemplate.update(sqlQuery,
-                film.getName(),
-                film.getDescription(),
-                film.getReleaseDate(),
-                film.getDuration(),
-                film.getMpa().getId(),
-                film.getId());
-        return film;
-    }
-
-*/
-
-
     public Film changeFilm(Film film) {
         if (film.getId() == null) {
             throw new ValidationException("Отсутствует id фильма");
@@ -210,6 +173,10 @@ public class FilmDaoImpl implements FilmStorage {
 
 
 
+    public void addNewGenreToFilm(Long filmId, Genre genre) {
+        String sql = "insert into FILMS_GENRES(FILM_ID, GENRE_ID) values  (?, ?)";
+        jdbcTemplate.update(sql, filmId, genre.getId());
+    }
 
 
 
