@@ -64,7 +64,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Optional<Object> findFilmById(int idFilm) {
+    public Optional<Object> findFilmById(Long idFilm) {
 
         if (films.get(idFilm) == null) {
             throw new FilmUserNotFoundException("Нет такого фильма");

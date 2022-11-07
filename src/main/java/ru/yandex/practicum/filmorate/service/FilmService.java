@@ -36,7 +36,7 @@ public class FilmService {
         return filmstorage.addFilm(film);
     }
 
-    public void addLike(Integer userId, Integer filmId) {
+    public void addLike(Long userId, Long filmId) {
         User  user = userstorage.findUserById( userId).get();
         Film film = (Film) findFilmById(filmId).get();
         film.addLike(user);
@@ -44,6 +44,14 @@ public class FilmService {
     }
 
 
+    public void removeLike(Long filmId, Long userId) {
+
+        Film film = (Film) filmstorage.findFilmById(filmId).get();
+        User user = userService.findUserById(userId).get();
+        film.removeLike(user);
+        filmstorage.changeFilm(film);
+        log.info("User: was like film: {}", user, film);
+    }
 
 
     public boolean checkValidationFilm(Film film) throws ValidationException {
@@ -67,7 +75,7 @@ public class FilmService {
         filmstorage.deleteFilm(idFilm);
     }
 
-    public Optional<Object> findFilmById(int idFilm) {
+    public Optional<Object> findFilmById(Long idFilm) {
         return  filmstorage.findFilmById(idFilm);
     }
 

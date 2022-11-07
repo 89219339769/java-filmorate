@@ -79,7 +79,7 @@ public class UserDaoImpl implements UserStorage {
             return user;
         }
 
-    public Optional<User> findUserById(Integer id) {
+    public Optional<User> findUserById(Long id) {
         SqlRowSet userRows = jdbcTemplate.queryForRowSet("select * from USERS_TABLE where USER_ID = ?", id);
         if (userRows.next()) {
             User user = new User(
@@ -99,8 +99,8 @@ public class UserDaoImpl implements UserStorage {
 
     @Override
     public void addFriend(long userId, long friendId) {
-        User friend = findUserById((int) friendId).get();
-        User user = findUserById((int) userId).get();
+        User friend = findUserById( friendId).get();
+        User user = findUserById( userId).get();
         user.addFriend(friend);
         changeUser(user);
     }

@@ -10,7 +10,7 @@ public interface UserStorage {
         User addUser(User user);
         void deleteUser(Integer idUser);
         User changeUser(User user);
-        Optional<User> findUserById(Integer id);
+        Optional<User> findUserById(Long id);
 
 
 

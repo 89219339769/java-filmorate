@@ -60,8 +60,8 @@ public class Film {
         likes.add(user);
     }
 
-    public void removeLike(Long userId) {
-        likes.remove(userId);
+    public void removeLike(User user) {
+        likes.remove(user);
     }
 }
 

@@ -38,7 +38,7 @@ public class FilmController {
     }
 
     @GetMapping("/films/{id}")
-    public Optional<Object> findFilmById(@PathVariable int id){
+    public Optional<Object> findFilmById(@PathVariable Long id){
         return filmService.findFilmById(id);
     }
 
@@ -48,31 +48,26 @@ public class FilmController {
     }
 
     @PutMapping("/films/{id}/like/{userId}")
-    public void addLike(@PathVariable int id, @PathVariable int userId){
+    public void addLike(@PathVariable Long id, @PathVariable Long userId){
         filmService.addLike(userId, id);
     }
+
+    @DeleteMapping("/films/{id}/like/{userId}")
+    public void deleteLike(@PathVariable Long id, @PathVariable Long userId){
+        filmService.removeLike(id, userId);
+    }
+
+
 
 }
 /*
-    @PutMapping("/films")
-    public Film changeFilm(@Valid @RequestBody Film film) throws ValidationException{
-        return filmService.changeFilm(film);
-    }
 
-    @GetMapping("/films")
-    public List<Film> allFilms(){
-        return filmService.getAllFilms();
-    }
 
-    @GetMapping("/films/{id}")
-    public Film findFilmById(@PathVariable int id){
-        return filmService.findFilmById(id);
-    }
 
-    @PutMapping("/films/{id}/like/{userId}")
-    public void addLike(@PathVariable int id, @PathVariable int userId){
-        filmService.addLike(userId, id);
-    }
+
+
+
+
 
     @DeleteMapping("/films/{id}/like/{userId}")
     public void deleteLike(@PathVariable int id, @PathVariable int userId){

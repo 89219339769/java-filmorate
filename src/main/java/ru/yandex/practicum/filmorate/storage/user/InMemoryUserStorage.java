@@ -49,7 +49,7 @@ public class InMemoryUserStorage implements UserStorage {
         return users.values().stream().collect(Collectors.toList());
     }
 
-    public Optional<User> findUserById(Integer id) {
+    public Optional<User> findUserById(Long id) {
         if (users.get(id) == null) {
             throw new FilmUserNotFoundException("Нет такого пользователя");
         }

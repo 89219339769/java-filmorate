@@ -7,7 +7,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exceptions.FilmUserNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Mpa;
@@ -86,7 +85,7 @@ public class FilmDaoImpl implements FilmStorage {
 
 
     @Override
-    public Optional<Object> findFilmById(int idFilm) {
+    public Optional<Object> findFilmById(Long idFilm) {
 
         SqlRowSet userRows = jdbcTemplate.queryForRowSet("select f.FILM_ID, f.NAME, f.DESCRIPTION, f.RELEASE_DATE," +
                 " f.DURATION, f.MPA_ID,m.NAME as MPA_NAME FROM table_films AS f JOIN table_mpa AS m ON m.mpa_id = f.mpa_id " +
@@ -208,6 +207,11 @@ public class FilmDaoImpl implements FilmStorage {
             e.printStackTrace();
         }
     }
+
+
+
+
+
 
 
 

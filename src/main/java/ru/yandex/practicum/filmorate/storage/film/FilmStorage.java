@@ -10,5 +10,5 @@ public interface FilmStorage {
     void deleteFilm(Integer idFilm);
     Film changeFilm(Film film);
     Collection<Film> getAllFilms();
-    Optional<Object> findFilmById(int idFilm);
+    Optional<Object> findFilmById(Long idFilm);
 }

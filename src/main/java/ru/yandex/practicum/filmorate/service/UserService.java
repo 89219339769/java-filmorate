@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.FilmUserNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
@@ -28,7 +27,7 @@ public class UserService {
         this.storage = storage;
     }
 
-    public Optional<User> findUserById(Integer id) {
+    public Optional<User> findUserById(Long id) {
         return storage.findUserById(id);
     }
 
