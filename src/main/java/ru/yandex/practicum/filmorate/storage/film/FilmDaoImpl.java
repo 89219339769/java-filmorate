@@ -65,6 +65,7 @@ public class FilmDaoImpl implements FilmStorage {
                     (rs.getInt("duration")),
                     new Mpa(rs.getInt("MPA_ID"), rs.getString("MPA_NAME"))
             );
+            film.setLikes((Set<User>) getFilmLikes( rs.getInt("film_id")));
             films.add(film);
         }
         return films;
