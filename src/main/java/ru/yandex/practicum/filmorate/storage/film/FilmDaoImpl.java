@@ -151,10 +151,7 @@ public class FilmDaoImpl implements FilmStorage {
           deleteLikes(film);
           insertLike(film);
         return film;
-
     }
-
-
 
     private void insertLike(Film film) {
         if (film.getLikes().isEmpty()) {
@@ -175,13 +172,10 @@ public class FilmDaoImpl implements FilmStorage {
         }
     }
 
-
-
     public void addNewGenreToFilm(Long filmId, Genre genre) {
         String sql = "insert into FILMS_GENRES(FILM_ID, GENRE_ID) values  (?, ?)";
         jdbcTemplate.update(sql, filmId, genre.getId());
     }
-
 
     @Override
     public List<Film> getMostPopular(Integer count) {
