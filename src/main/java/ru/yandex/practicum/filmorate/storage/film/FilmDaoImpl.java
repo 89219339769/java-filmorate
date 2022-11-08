@@ -115,7 +115,7 @@ public class FilmDaoImpl implements FilmStorage {
 
         public Collection<User> getFilmLikes(Integer id) {
 
-            final String sql = "SELECT * From USERS_TABLE where USER_ID IN (SELECT FILM_ID FROM LIKES where USER_ID = ?)";
+            final String sql = "SELECT * From USERS_TABLE where USER_ID IN (SELECT USER_ID FROM LIKES where FILM_ID = ?)";
             Collection<User> likes = new HashSet<>();
             SqlRowSet rs = jdbcTemplate.queryForRowSet(sql, id);
             while (rs.next()) {
