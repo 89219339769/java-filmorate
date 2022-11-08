@@ -187,7 +187,7 @@ public class FilmDaoImpl implements FilmStorage {
     public List<Film> getMostPopular(Integer count) {
         String sql = "select F.FILM_ID, F.NAME, F.DESCRIPTION, F.RELEASE_DATE,  F.DURATION, F.MPA_ID, F.NAME as MPAA_NAME " +
                 "from TABLE_FILMS F LEFT JOIN  LIKES L on F.FILM_ID  = L.FILM_ID " +
-                "GROUP BY F.FILM_ID, L.USER_ID ORDER BY COUNT(L.USER_ID) DESC LIMIT :count";
+                "GROUP BY F.FILM_ID, L.USER_ID ORDER BY COUNT(L.FILM_ID) DESC LIMIT :count";
 
         SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("count", count);
@@ -206,18 +206,12 @@ public class FilmDaoImpl implements FilmStorage {
                             (rs.getInt("duration")),
                             new Mpa(rs.getInt("MPA_ID"), rs.getString("MPAA_NAME"))
                     );
-                    getFilmLikes(film.getId());
+                    film.setLikes((Set<User>) getFilmLikes( rs.getInt("film_id")));
                     return film;
                 }
         );
         return films;
     }
-
-
-//ttttt
-
-
-
 
 }
 
