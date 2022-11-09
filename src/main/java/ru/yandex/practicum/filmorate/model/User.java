@@ -1,76 +1,28 @@
 package ru.yandex.practicum.filmorate.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class User {
-
-    private Integer id;
-
-    private Set<User> friends = new HashSet<>();
-
-    @Email
-    @NonNull
-    @NotBlank
-    private String email;
-
-    @NonNull
-    @NotBlank
-    @Pattern(regexp = "\\S+")
+    private Long id;
+    @NotBlank(message = "Логин не может быть пустым.")
+    @Pattern(regexp = "^\\S*$", message = "Логин не может содержать пробелы.")
     private String login;
-
     private String name;
-
-    @PastOrPresent
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @Email(message = "Электронная почта не может быть пустой и должна содержать символ '@'.")
+    private String email;
+    @PastOrPresent(message = "Дата рождения не может быть в будущем.")
     private LocalDate birthday;
-
-    public User(Integer id, @Valid String email, @Valid String login, String name, LocalDate birthday) {
-        this.id = id;
-        this.email = email;
-        this.login = login;
-        this.name = name.isEmpty() || name.isBlank() ? login : name;
-        this.birthday = birthday;
-        this.friends = new HashSet<>();
-    }
-
-    public void addFriend(User user) {
-        this.friends.add(user);
-    }
-
-
-  //  @Override
-  //  public boolean equals(Object o) {
-  //      if (this == o) {
-  //          return true;
-  //      }
- //       if (o == null || getClass() != o.getClass()) {
-  //          return false;
-  //      }
- //       User user = (User) o;
-  //      return id == user.id &&
-   //             id.equals(user.id);
- //   }
-
-
+    private List<Long> friends;
 }
-
-
-
-
-
 
 

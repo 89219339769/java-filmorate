@@ -8,14 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.service.MpaService;
 
-
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/mpa")
 public class MpaController {
-
     private final MpaService mpaService;
 
     @Autowired
@@ -23,14 +20,13 @@ public class MpaController {
         this.mpaService = mpaService;
     }
 
-    @GetMapping("{id}")
-    public Optional<Mpa> getMpaById(@PathVariable Integer id) {
-
-        return mpaService.getById(id);
+    @GetMapping("/{id}")
+    public Mpa findMpaById(@PathVariable Long id) {
+        return mpaService.findMpaById(id);
     }
 
     @GetMapping()
-    public List<Mpa> getAll() {
-        return mpaService.getAll();
+    public List<Mpa> findAllMpa() {
+        return mpaService.findAllMpa();
     }
 }

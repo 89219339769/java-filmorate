@@ -4,95 +4,69 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
+import ru.yandex.practicum.filmorate.exceptions.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
-@Slf4j
 @Service
+@Slf4j
 public class FilmService {
-    private static final LocalDate MIN_DATE_START_RELEASE = LocalDate.parse("1895-12-28");
-
-    private UserStorage userstorage;
-    private FilmStorage filmstorage;
-    private final UserService userService;
-
+    private final FilmStorage filmStorage;
 
     @Autowired
-    public FilmService(@Qualifier("FilmDaoImpl") FilmStorage filmstorage, @Qualifier("UserDaoImpl") UserStorage userstorage, UserService userService) {
-        this.userstorage = userstorage;
-        this.filmstorage = filmstorage;
-        this.userService = userService;
+    public FilmService(@Qualifier("filmDbStorage") FilmStorage filmStorage) {
+        this.filmStorage = filmStorage;
     }
 
-    public Optional<Object> addFilm(Film film) {
-        checkValidationFilm(film);
-        return filmstorage.addFilm(film);
+    public Film addFilm(Film film) {
+        Film savedFilm = filmStorage.addFilm(film);
+        log.debug("Фильм '{}' с id={} добавлен.", film.getName(), film.getId());
+        return savedFilm;
     }
 
-    public void addLike(Long userId, Long filmId) {
-        User  user = userstorage.findUserById( userId).get();
-        Film film = (Film) findFilmById(filmId).get();
-        film.addLike(user);
-        changeFilm(film);
-    }
-
-
-    public void removeLike(Long filmId, Long userId) {
-
-        Film film = (Film) filmstorage.findFilmById(filmId).get();
-        User user = userService.findUserById(userId).get();
-        film.removeLike(user);
-        filmstorage.changeFilm(film);
-        log.info("User: was like film: {}", user, film);
-    }
-
-
-    public boolean checkValidationFilm(Film film) throws ValidationException {
-        if (film.getReleaseDate().isBefore(MIN_DATE_START_RELEASE)) {
-            log.info("Ошибка валидации: дата релиза — раньше 28 декабря 1895 года");
-            throw new ValidationException("дата релиза раньше 28 декабря 1895 года");
-        } else if (film.getDuration() < 0) {
-            log.info("Ошибка валидации: продолжительность фильма отрицательная");
-            throw new ValidationException("продолжительность фильма должна быть положительной");
+    public Film findFilmById(Long id) {
+        Film film = filmStorage.findFilmById(id);
+        if (film == null) {
+            throw new ObjectNotFoundException(String.format("Фильм с id=%d не найден.", id));
         }
+        log.debug("Фильм '{}' с id={} найден.", film.getName(), film.getId());
+        return film;
+    }
+
+    public List<Film> findAllFilms() {
+        List<Film> films = filmStorage.findAllFilms();
+        log.debug("Все фильмы найдены.");
+        return films;
+    }
+
+    public Film updateFilm(Film film) {
+        findFilmById(film.getId());
+        Film updatedFilm = filmStorage.updateFilm(film);
+        log.debug("Фильм с id={} обновлён.", film.getId());
+        return updatedFilm;
+    }
+
+
+    public boolean saveLike(Long id, Long userId) {
+        boolean result = filmStorage.saveLike(id, userId);
+        log.debug("Пользователь с id={} поставил лайк на фильм с id={}.", userId, id);
+        return result;
+    }
+
+    public List<Film> findPopularFilms(Integer count) {
+        List<Film> popularFilms = filmStorage.findPopularFilms(count);
+        log.debug("{} наиболее популярных фильмов возвращены.", count);
+        return popularFilms;
+    }
+
+    public boolean deleteLike(Long id, Long userId) {
+        if (!filmStorage.deleteLike(id, userId)) {
+            throw new ObjectNotFoundException(String.format("Пользователь с id=%d не ставил лайк фильму с id=%d.", userId, id));
+        }
+        log.debug("Пользователь с id={} удалил лайк с фильма с id={}.", userId, id);
         return true;
     }
-
-
-
-    public Collection<Film> getAllFilms() {
-        return filmstorage.getAllFilms();
-    }
-
-    public void deleteFilm(Integer idFilm) {
-        filmstorage.deleteFilm(idFilm);
-    }
-
-    public Optional<Object> findFilmById(Long idFilm) {
-        return  filmstorage.findFilmById(idFilm);
-    }
-
-    public Film changeFilm(Film film) {
-        checkValidationFilm(film);
-        return filmstorage.changeFilm(film);
-    }
-
-
-    public List<Film> getMostPopular(Integer count) {
-        return filmstorage.getMostPopular(count);
-    }
-
-
-
 }
-
-
 

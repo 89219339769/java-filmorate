@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.FilmController;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
+import ru.yandex.practicum.filmorate.exceptions.ObjectAlreadyExistException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
@@ -46,7 +46,7 @@ public class FilmControllerTest {
         updateFilm.setReleaseDate(LocalDate.of(1721, 1, 1));
         RuntimeException exception;
 
-        exception = assertThrows(ValidationException.class, () ->filmController.filmService.checkValidationFilm(updateFilm));
+        exception = assertThrows(ObjectAlreadyExistException.class, () ->filmController.filmService.checkValidationFilm(updateFilm));
         assertEquals(exception.getMessage(), exception.getMessage(), "дата релиза раньше 28 декабря 1895 года");
     }
 
@@ -57,7 +57,7 @@ public class FilmControllerTest {
         updateFilm.setDuration(-90);
         RuntimeException exception;
 
-        exception = assertThrows(ValidationException.class, () -> filmController.filmService.checkValidationFilm(updateFilm));
+        exception = assertThrows(ObjectAlreadyExistException.class, () -> filmController.filmService.checkValidationFilm(updateFilm));
         assertEquals(exception.getMessage(), exception.getMessage(), "продолжительность фильма должна быть положительной");
     }
 }
