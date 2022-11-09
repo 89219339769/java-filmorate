@@ -31,8 +31,7 @@ class FilmorateApplicationTests {
     private final JdbcTemplate jdbcTemplate;
     private final UserDbStorage userDbStorage;
     private final FilmDbStorage filmDbStorage;
-    private final MpaDbStorage mpaDbStorage;
-    private final GenreDbStorage genreDbStorage;
+
 
     private User getUser() {
         return User.builder().email("test@mail.ru").login("testLogin").name("testName").birthday(Date.valueOf("1946-08-20").toLocalDate()).friends(new ArrayList<>()).build();
