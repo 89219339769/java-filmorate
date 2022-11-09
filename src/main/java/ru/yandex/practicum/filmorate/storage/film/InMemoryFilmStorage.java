@@ -23,12 +23,12 @@ public class InMemoryFilmStorage implements FilmStorage {
 
 
     @Override
-    public Film addFilm(Film film) {
+    public Optional<Object> addFilm(Film film) {
         film.setId(createNextId());
         films.put(film.getId(), film);
         log.info("Успешное добавление фильма: наименование - {}, символов в описании - {}, дата - {}, " +
                         "продолжительность - {}", film.getName(), film.getDescription().length(), film.getReleaseDate(), film.getDuration());
-        return film;
+        return Optional.of(film);
     }
 
     @Override

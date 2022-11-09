@@ -32,7 +32,7 @@ public class FilmService {
         this.userService = userService;
     }
 
-    public Film addFilm(Film film) {
+    public Optional<Object> addFilm(Film film) {
         checkValidationFilm(film);
         return filmstorage.addFilm(film);
     }

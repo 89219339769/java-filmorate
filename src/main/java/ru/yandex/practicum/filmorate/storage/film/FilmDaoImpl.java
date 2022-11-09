@@ -15,6 +15,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.genre.GenreDao;
 import ru.yandex.practicum.filmorate.storage.user.UserDaoImpl;
 
 import java.sql.*;
@@ -26,30 +27,53 @@ import java.util.*;
 public class FilmDaoImpl implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
     UserDaoImpl userDaoImpl;
+    GenreDao genreDao;
     @Autowired
-    public FilmDaoImpl(JdbcTemplate jdbcTemplate) {
+    public FilmDaoImpl(JdbcTemplate jdbcTemplate,GenreDao genreDao) {
         this.jdbcTemplate = jdbcTemplate;
+        this.genreDao=genreDao;
     }
 
     @Override
-    public Film addFilm(Film film) {
-        String sqlQuery = "INSERT INTO table_films (name, description, release_date, duration,MPA_ID) " +
-                "VALUES (?, ?, ?, ?, ?);";
+    public Optional<Object> addFilm(Film film) {
+        String sqlQuery = "insert into TABLE_FILMS(NAME, RELEASE_DATE, DESCRIPTION, DURATION, MPA_ID ) values (?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(sqlQuery, new String[]{"MPA_ID"});
-            statement.setString(1, film.getName());
-            statement.setString(2, film.getDescription());
-            statement.setDate(3, Date.valueOf(film.getReleaseDate()));
-            statement.setLong(4, film.getDuration());
-            statement.setLong(5, film.getMpa().getId());
-            return statement;
+            PreparedStatement ps = connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, film.getName());
+            ps.setDate(2, Date.valueOf(film.getReleaseDate()));
+            ps.setString(3, film.getDescription());
+            ps.setInt(4, film.getDuration());
+            ps.setInt(5, Math.toIntExact(film.getMpa().getId()));
+            return ps;
         }, keyHolder);
 
-        film.setId((int) Objects.requireNonNull(keyHolder.getKey()).longValue());
-        return film;
+        long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
+        if (film.getGenres() != null) {
+            for (Genre genre : film.getGenres()) {
+                String sql = "insert into  FILMS_GENRES values (?, ?)";
+                jdbcTemplate.update(sql,
+                        id,
+                        genre.getId());
+                log.info("Жанры фильма с id = {} обновлены.", film.getId());
+            }
+        }
+        return findFilmById(id);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @Override
     public Collection<Film> getAllFilms() {
@@ -104,7 +128,8 @@ public class FilmDaoImpl implements FilmStorage {
                     userRows.getInt("duration"),
                     new Mpa(userRows.getInt("MPA_ID"), userRows.getString("MPA_NAME")));
            film.setLikes((Set<User>)getFilmLikes(film.getId()));
-            log.info("Найден фильм: {} {}");
+        //    film.setGenres((List<Genre>)genreDao.findById(film.getId()));
+           log.info("Найден фильм: {} {}");
 
             return Optional.of(film);
         } else {

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FilmStorage {
-    Film addFilm(Film film);
+    Optional<Object> addFilm(Film film);
     void deleteFilm(Integer idFilm);
     Film changeFilm(Film film);
     Collection<Film> getAllFilms();
