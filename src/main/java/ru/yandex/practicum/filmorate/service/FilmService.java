@@ -57,7 +57,7 @@ public class FilmService {
 
     public List<Film> findPopularFilms(Integer count) {
         List<Film> popularFilms = filmStorage.findPopularFilms(count);
-        log.debug("{} наиболее популярных фильмов возвращены.", count);
+        log.debug("{}  фильмов возвращены.", count);
         return popularFilms;
     }
 
