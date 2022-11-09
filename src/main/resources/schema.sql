@@ -1,7 +1,3 @@
-CREATE ALIAS IF NOT EXISTS getDate AS
-    'java.util.Date getDate() {
-        return new java.util.Date();
-    }';
 
 CREATE TABLE IF NOT EXISTS users
 (
