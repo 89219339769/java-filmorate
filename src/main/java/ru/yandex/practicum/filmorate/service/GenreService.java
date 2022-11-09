@@ -26,7 +26,7 @@ public class  GenreService {
     }
 
 
-    public Optional<Genre> findById(Integer id) {
+    public Genre findById(Integer id) {
         return genreDao.findById(id);
     }
 

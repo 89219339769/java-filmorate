@@ -4,20 +4,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Genre;
 
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
 public class GenreDao {
 
-    private static final String SELECT_ALL = "select * from GENRES";
-    private static final String SELECT_BY_ID = "select * from GENRES where genre_id =  ?";
-    private static final String ADD_GENRE = "insert into GENRES (NAME) values (?)";
-    private static final String UPDATE_BY_ID = "update GENRES set NAME = ? where genre_id = ?";
+    private static final String SELECT_ALL = "select * from TABLE_GENRES";
+    private static final String SELECT_BY_ID = "select * from TABLE_GENRES where GENRES_ID =  ?";
+    private static final String ADD_GENRE = "insert into TABLE_GENRES (NAME) values (?)";
+    private static final String UPDATE_BY_ID = "update TABLE_GENRES set NAME = ? where GENRES_IDd = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -33,13 +35,13 @@ public class GenreDao {
     }
 
 
-    public Optional<Genre> findById(Integer id) {
+    public Genre findById(Integer id) {
         SqlRowSet rs = jdbcTemplate.queryForRowSet(SELECT_BY_ID, id);
         if (rs.next()) {
-            return Optional.of(new Genre(rs.getInt(1),
+            return (new Genre(rs.getInt(1),
                     rs.getString(2)));
         }
-        return Optional.empty();
+        throw new ValidationException("у фильма не указан жанр");
     }
 
 

@@ -59,19 +59,8 @@ public class FilmDaoImpl implements FilmStorage {
                 log.info("Жанры фильма с id = {} обновлены.", film.getId());
             }
         }
-        return findFilmById(id);
+        return Optional.of(film);
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -128,7 +117,9 @@ public class FilmDaoImpl implements FilmStorage {
                     userRows.getInt("duration"),
                     new Mpa(userRows.getInt("MPA_ID"), userRows.getString("MPA_NAME")));
            film.setLikes((Set<User>)getFilmLikes(film.getId()));
-        //    film.setGenres((List<Genre>)genreDao.findById(film.getId()));
+            List<Genre> temp = new ArrayList<>();
+            temp.add(genreDao.findById(film.getId()));
+           film.setGenres(temp);
            log.info("Найден фильм: {} {}");
 
             return Optional.of(film);
@@ -137,6 +128,15 @@ public class FilmDaoImpl implements FilmStorage {
             return Optional.empty();
         }
     }
+
+
+
+
+
+
+
+
+
 
         public Collection<User> getFilmLikes(Integer id) {
 
