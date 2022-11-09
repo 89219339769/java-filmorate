@@ -51,7 +51,6 @@ class FilmorateApplicationTests {
         jdbcTemplate.update("DELETE FROM FILMS");
         jdbcTemplate.update("ALTER TABLE USERS ALTER COLUMN ID RESTART WITH 1");
         jdbcTemplate.update("ALTER TABLE FILMS ALTER COLUMN ID RESTART WITH 1");
-
     }
 
     @Test
@@ -104,6 +103,7 @@ class FilmorateApplicationTests {
         user.setLogin("testUpdateLogin");
         assertEquals(user, userDbStorage.updateUser(user));
     }
+
 
     @Test
     void testUpdateUnknownUser() {
