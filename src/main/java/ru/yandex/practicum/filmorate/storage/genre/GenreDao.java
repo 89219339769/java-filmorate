@@ -19,7 +19,7 @@ public class GenreDao {
     private static final String SELECT_ALL = "select * from TABLE_GENRES";
     private static final String SELECT_BY_ID = "select * from TABLE_GENRES where GENRES_ID =  ?";
     private static final String ADD_GENRE = "insert into TABLE_GENRES (NAME) values (?)";
-    private static final String UPDATE_BY_ID = "update TABLE_GENRES set NAME = ? where GENRES_IDd = ?";
+    private static final String UPDATE_BY_ID = "update TABLE_GENRES set NAME = ? where GENRES_ID = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -31,7 +31,7 @@ public class GenreDao {
 
     public Collection<Genre> findAll() {
         return jdbcTemplate.queryForStream(SELECT_ALL,
-                (rs, rowNum) -> new Genre(rs.getInt("GENRE_ID"), rs.getString("name"))).collect(Collectors.toList());
+                (rs, rowNum) -> new Genre(rs.getInt("GENRES_ID"), rs.getString("name"))).collect(Collectors.toList());
     }
 
 
@@ -41,7 +41,7 @@ public class GenreDao {
             return (new Genre(rs.getInt(1),
                     rs.getString(2)));
         }
-        throw new ValidationException("у фильма не указан жанр");
+       return  null;
     }
 
 

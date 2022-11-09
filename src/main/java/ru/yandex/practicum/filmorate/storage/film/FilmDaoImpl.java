@@ -79,10 +79,16 @@ public class FilmDaoImpl implements FilmStorage {
                     new Mpa(rs.getInt("MPA_ID"), rs.getString("MPA_NAME"))
             );
             film.setLikes((Set<User>) getFilmLikes( rs.getInt("film_id")));
+            List<Genre> temp = new ArrayList<>();
+            temp.add(genreDao.findById(rs.getInt("film_id")));
+            film.setGenres(temp);
             films.add(film);
         }
         return films;
     }
+
+
+
 
 
     @Override
@@ -197,10 +203,7 @@ public class FilmDaoImpl implements FilmStorage {
         }
     }
 
-    public void addNewGenreToFilm(Long filmId, Genre genre) {
-        String sql = "insert into FILMS_GENRES(FILM_ID, GENRE_ID) values  (?, ?)";
-        jdbcTemplate.update(sql, filmId, genre.getId());
-    }
+
 
     @Override
     public List<Film> getMostPopular(Integer count) {
