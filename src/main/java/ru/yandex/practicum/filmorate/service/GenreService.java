@@ -20,13 +20,13 @@ public class GenreService {
 
     public Genre findGenreById(Long id) {
         Genre genre = genreDbStorage.findGenreById(id);
-        log.info("Найден жанр c id = {}", id);
+        log.info("Найден жанр ", id);
         return genre;
     }
 
     public List<Genre> findFilmGenresByFilmId(Long id) {
         List<Genre> genres = genreDbStorage.findFilmGenresByFilmId(id);
-        log.info("Найдены жанры фильма c id={}", id);
+        log.info("Найдены жанры фильма ", id);
         return genres;
     }
 

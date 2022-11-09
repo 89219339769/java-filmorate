@@ -1,63 +1,86 @@
 package ru.yandex.practicum.filmorate;
 
-import org.junit.jupiter.api.BeforeEach;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 import ru.yandex.practicum.filmorate.controller.FilmController;
-import ru.yandex.practicum.filmorate.exceptions.ObjectAlreadyExistException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
-import java.time.LocalDate;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.springframework.test.util.AssertionErrors.assertEquals;
 
+import java.time.LocalDate;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@SpringBootTest
+@AutoConfigureMockMvc
 public class FilmControllerTest {
-    private  FilmController filmController;;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Autowired
+    private FilmController filmController;
+    @Autowired
+    private MockMvc mockMvc;
+
+    @AfterEach
+    void tearDown() {
+        filmController.findAllFilms().clear();
+    }
 
     private Film getFilm() {
         return Film.builder()
-                .id(1)
-                .description("Фильмов много — и с каждым годом становится всё больше.")
-                .name("фильм")
-                .releaseDate(LocalDate.of(1921, 1, 1))
-                .duration(90)
+                .name("Test")
+                .description("Description")
+                .releaseDate(LocalDate.of(1895, 12, 28))
+                .duration(1)
                 .build();
-
     }
 
-    @BeforeEach
-    public void beforeEach() {
-        FilmStorage inMemoryFilmStorage = new InMemoryFilmStorage();
-        UserStorage inMemoryUserStorage = new InMemoryUserStorage();
-        FilmService filmService = new FilmService(inMemoryFilmStorage,inMemoryUserStorage, userService);
 
-        filmController = new FilmController(filmService);
+    @Test
+    public void givenFilmWithFailedName_whenCreate_thenStatus400() throws Exception {
         Film film = getFilm();
-        filmController.addFilm(film);
+        film.setName("");
+        mockMvc.perform(post("/films")
+                        .content(objectMapper.writeValueAsString(film))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
-    public void createFilmWithInvalidRelisDate() {
-
-        Film updateFilm = getFilm();
-        updateFilm.setReleaseDate(LocalDate.of(1721, 1, 1));
-        RuntimeException exception;
-
-        exception = assertThrows(ObjectAlreadyExistException.class, () ->filmController.filmService.checkValidationFilm(updateFilm));
-        assertEquals(exception.getMessage(), exception.getMessage(), "дата релиза раньше 28 декабря 1895 года");
+    public void givenFilmWithFailedDescription_whenCreate_thenStatus400() throws Exception {
+        Film film = getFilm();
+        film.setDescription("123456789012345678901234567890123456789012345678901234567890" +
+                "1234567890123456789012345678901234567890123456789012345678901234567890" +
+                "12345678901234567890123456789012345678901234567890123456789012345678901");
+        mockMvc.perform(post("/films")
+                        .content(objectMapper.writeValueAsString(film))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
-    public void createFilmWithInvalidDuration() {
-
-        Film updateFilm = getFilm();
-        updateFilm.setDuration(-90);
-        RuntimeException exception;
-
-        exception = assertThrows(ObjectAlreadyExistException.class, () -> filmController.filmService.checkValidationFilm(updateFilm));
-        assertEquals(exception.getMessage(), exception.getMessage(), "продолжительность фильма должна быть положительной");
+    public void givenFilmWithFailedReleaseDate_whenCreate_thenStatus400() throws Exception {
+        Film film = getFilm();
+        film.setReleaseDate(LocalDate.of(1895, 12, 27));
+        mockMvc.perform(post("/films")
+                        .content(objectMapper.writeValueAsString(film))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
     }
+
+    @Test
+    public void givenFilmWithFailedDuration_whenCreate_thenStatus400() throws Exception {
+        Film film = getFilm();
+        film.setDuration(0);
+        mockMvc.perform(post("/films")
+                        .content(objectMapper.writeValueAsString(film))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
+    }
+
 }

@@ -22,7 +22,7 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public User saveUser(User user) {
+    public User addUser(User user) {
         String sqlQuery = "insert into USERS(EMAIL, LOGIN, NAME, BIRTHDAY) values (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {

@@ -21,7 +21,7 @@ public class MpaService {
 
     public Mpa findMpaById(Long id) {
         Mpa mpa = mpaDbStorage.findMpaById(id);
-        log.info("Найден MPA c id = {}", id);
+        log.info("Найден MPA", id);
         return mpa;
     }
 

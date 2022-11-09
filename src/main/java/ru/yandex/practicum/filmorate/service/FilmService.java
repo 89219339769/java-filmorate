@@ -22,7 +22,7 @@ public class FilmService {
 
     public Film addFilm(Film film) {
         Film savedFilm = filmStorage.addFilm(film);
-        log.debug("Фильм '{}' с id={} добавлен.", film.getName(), film.getId());
+        log.debug("Фильм  добавлен.", film.getName(), film.getId());
         return savedFilm;
     }
 
@@ -31,7 +31,7 @@ public class FilmService {
         if (film == null) {
             throw new ObjectNotFoundException(String.format("Фильм с id=%d не найден.", id));
         }
-        log.debug("Фильм '{}' с id={} найден.", film.getName(), film.getId());
+        log.debug("Фильм  найден.", film.getName(), film.getId());
         return film;
     }
 
@@ -44,20 +44,20 @@ public class FilmService {
     public Film updateFilm(Film film) {
         findFilmById(film.getId());
         Film updatedFilm = filmStorage.updateFilm(film);
-        log.debug("Фильм с id={} обновлён.", film.getId());
+        log.debug("Фильм  обновлён.", film.getId());
         return updatedFilm;
     }
 
 
     public boolean saveLike(Long id, Long userId) {
         boolean result = filmStorage.saveLike(id, userId);
-        log.debug("Пользователь с id={} поставил лайк на фильм с id={}.", userId, id);
+        log.debug("Пользователь  поставил лайк.", userId, id);
         return result;
     }
 
     public List<Film> findPopularFilms(Integer count) {
         List<Film> popularFilms = filmStorage.findPopularFilms(count);
-        log.debug("{}  фильмов возвращены.", count);
+        log.debug(" фильмов возвращены.", count);
         return popularFilms;
     }
 
@@ -65,7 +65,7 @@ public class FilmService {
         if (!filmStorage.deleteLike(id, userId)) {
             throw new ObjectNotFoundException(String.format("Пользователь с id=%d не ставил лайк фильму с id=%d.", userId, id));
         }
-        log.debug("Пользователь с id={} удалил лайк с фильма с id={}.", userId, id);
+        log.debug("Пользователь  удалил лайк ", userId, id);
         return true;
     }
 }
