@@ -89,8 +89,6 @@ public class FilmDaoImpl implements FilmStorage {
 
 
 
-
-
     @Override
     public void deleteFilm(Integer idFilm) {
         String sqlQuery = "delete from TABLE_FILMS where FILM_ID = ?";
@@ -178,9 +176,11 @@ public class FilmDaoImpl implements FilmStorage {
                 film.getDuration(),
                 film.getMpa().getId(),
                 film.getId());
-
+                film.getGenres();
           deleteLikes(film);
           insertLike(film);
+
+
         return film;
     }
 
@@ -229,6 +229,9 @@ public class FilmDaoImpl implements FilmStorage {
                             new Mpa(rs.getInt("MPA_ID"), rs.getString("MPAA_NAME"))
                     );
                     film.setLikes((Set<User>) getFilmLikes( rs.getInt("film_id")));
+                    List<Genre> temp = new ArrayList<>();
+                    temp.add(genreDao.findById(film.getId()));
+                    film.setGenres(temp);
                     return film;
                 }
         );
