@@ -51,15 +51,7 @@ public class FilmDbStorage implements FilmStorage {
         long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
         if (film.getGenres() != null) {
-            // for (Genre genre : film.getGenres()) {
                String sql = "insert into FILM_GENRE values (?, ?)";
-            //    jdbcTemplate.update(sql,
-           //             id,
-           //             genre.getId());
-         //       log.info("Жанры фильма с id = {} обновлены.", film.getId());
-          //  }
-
-
             try (Connection connection = jdbcTemplate.getDataSource().getConnection();
                  PreparedStatement ps = connection.prepareStatement(sql)) {
                 for (Genre genre : film.getGenres()) {
