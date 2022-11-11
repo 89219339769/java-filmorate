@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,13 +12,11 @@ import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class MpaService {
     private final MpaDbStorage mpaDbStorage;
 
-    @Autowired
-    public MpaService(MpaDbStorage mpaDbStorage) {
-        this.mpaDbStorage = mpaDbStorage;
-    }
+
 
     public Mpa findMpaById(Long id) {
         Mpa mpa = mpaDbStorage.findMpaById(id);
