@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -54,9 +55,7 @@ public class FilmControllerTest {
     @Test
     public void givenFilmWithFailedDescription_whenCreate_thenStatus400() throws Exception {
         Film film = getFilm();
-        film.setDescription("123456789012345678901234567890123456789012345678901234567890" +
-                "1234567890123456789012345678901234567890123456789012345678901234567890" +
-                "12345678901234567890123456789012345678901234567890123456789012345678901");
+        film.setDescription("a\".repeat 201");
         mockMvc.perform(post("/films")
                         .content(objectMapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -82,5 +81,4 @@ public class FilmControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError());
     }
-
 }
