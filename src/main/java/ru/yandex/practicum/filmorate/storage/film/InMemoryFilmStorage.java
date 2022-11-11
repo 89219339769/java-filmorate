@@ -1,72 +1,66 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exceptions.FilmUserNotFoundException;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-
-@Component
-@Slf4j
+@Component("inMemoryFilmStorage")
 public class InMemoryFilmStorage implements FilmStorage {
-    private final Map<Integer, Film> films = new HashMap<>();
-
-    private Integer globalIdFilm = 1;
-
-    private Integer createNextId() {
-        return globalIdFilm++;
-    }
-
+    private final Map<Long, Film> films = new HashMap<>();
+    private Long id = 1L;
 
     @Override
     public Film addFilm(Film film) {
-        film.setId(createNextId());
+        film.setId(id++);
         films.put(film.getId(), film);
-        log.info("Успешное добавление фильма: наименование - {}, символов в описании - {}, дата - {}, " +
-                        "продолжительность - {}", film.getName(), film.getDescription().length(), film.getReleaseDate(), film.getDuration());
         return film;
     }
 
     @Override
-    public void deleteFilm(Integer idFilm) {
-        films.remove(idFilm);
+    public Film findFilmById(Long id) {
+        return films.get(id);
     }
 
     @Override
-    public Film changeFilm(Film film) {
-        if (film.getId() == null) {
-            throw new ValidationException("Отсутствует id параметр фильм");
-        }
+    public List<Film> findAllFilms() {
+        return new ArrayList<>(films.values());
+    }
 
-
-        if (!films.containsKey(film.getId())) {
-            throw new FilmUserNotFoundException("фильма с этим номером нет, перезаписать невозможно");
-        }
-
-            films.put(film.getId(), film);
-            log.info("Успешное изменение фильма: наименование - {}, символов в описании - {}, дата - {}, " +
-                            "продолжительность - {}", film.getName(), film.getDescription().length()
-                    , film.getReleaseDate(), film.getDuration());
-
+    @Override
+    public Film updateFilm(Film film) {
+        films.put(film.getId(), film);
         return film;
     }
 
     @Override
-    public List<Film> getAllFilms() {
-        return films.values().stream().collect(Collectors.toList());
+    public boolean saveLike(Long id, Long userId) {
+        Film film = findFilmById(id);
+        if (film.getLikes() == null) {
+            film.setLikes(new ArrayList<>());
+        }
+        return film.getLikes().add(userId);
     }
 
     @Override
-    public Film findFilmById(int idFilm) {
-
-        if (films.get(idFilm) == null) {
-            throw new FilmUserNotFoundException("Нет такого фильма");
+    public List<Film> findPopularFilms(Integer count) {
+        List<Film> allFilms = findAllFilms();
+        for (Film film : allFilms) {
+            if (film.getLikes() == null) {
+                film.setLikes(new ArrayList<>());
+            }
         }
-        return films.get(idFilm);
+        allFilms.sort(Comparator.comparing(film -> film.getLikes().size() * -1));
+        if (allFilms.size() < count) {
+            count = allFilms.size();
+        }
+        return IntStream.range(0, count).mapToObj(allFilms::get).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    @Override
+    public boolean deleteLike(Long id, Long userId) {
+        return findFilmById(id).getLikes().remove(userId);
     }
 }
