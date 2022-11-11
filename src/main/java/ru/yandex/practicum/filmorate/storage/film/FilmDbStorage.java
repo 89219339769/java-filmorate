@@ -51,16 +51,38 @@ public class FilmDbStorage implements FilmStorage {
         long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
         if (film.getGenres() != null) {
-            for (Genre genre : film.getGenres()) {
-                String sql = "insert into FILM_GENRE values (?, ?)";
-                jdbcTemplate.update(sql,
-                        id,
-                        genre.getId());
-                log.info("Жанры фильма с id = {} обновлены.", film.getId());
+            // for (Genre genre : film.getGenres()) {
+               String sql = "insert into FILM_GENRE values (?, ?)";
+            //    jdbcTemplate.update(sql,
+           //             id,
+           //             genre.getId());
+         //       log.info("Жанры фильма с id = {} обновлены.", film.getId());
+          //  }
+
+
+            try (Connection connection = jdbcTemplate.getDataSource().getConnection();
+                 PreparedStatement ps = connection.prepareStatement(sql)) {
+                for (Genre genre : film.getGenres()) {
+                    ps.setLong(1,  id);
+                    ps.setLong(2,  genre.getId());
+                    ps.addBatch();
+                }
+                ps.executeBatch();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
         return findFilmById(id);
     }
+
+
+
+
+
+
+
+
+
 
     @Override
     public Film findFilmById(Long id) {
