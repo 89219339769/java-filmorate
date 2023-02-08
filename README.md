@@ -2,7 +2,7 @@
 Приложение создано для просмотра фильмов по своим предпочтениям и рекомендациям друзей.
 
 Использованные технологии:
-Java 11, Maven, Spring-Boot, H2 database, Lombok, JDBC, H2Database
+Java 11, Maven, Spring-Boot, H2 database, Lombok, JDBC, H2Database.
 
 Приложение предоставляет возможность:
 
